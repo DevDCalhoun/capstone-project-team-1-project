@@ -2,8 +2,6 @@ const express = require('express');
 const path = require('path');
 
 const app = express();
-const port = 3000;
-
 
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
@@ -17,6 +15,15 @@ app.get('/about', (req, res) => {
   res.render('about');
 })
 
-app.listen(port, () => {
-  console.log(`Server listening on http://localhost:${port}`);
+// 404 error route for undefined routes
+app.use((req, res, next) => {
+  res.status(404).render('404error')
 })
+
+// route for handling general errors that are not undefined routes
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).render('error')
+})
+
+module.exports = app;
