@@ -3,12 +3,24 @@ const path = require('path');
 
 const app = express();
 
+const mongoose = require('mongoose');
+const UserAccounts = require('./models/userAccounts');
+
+mongoose.connect('mongodb://localhost:27017/disruptutor')
+
+const db = mongoose.connection; //shortcut variable
+db.on('error', console.error.bind(console, "connection"))
+db.once('open', () => {
+  console.log("Database connected");
+})
+
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.get('/', (req, res) => {
   res.render('home');
+  
 })
 
 app.get('/about', (req, res) => {
