@@ -22,7 +22,6 @@ mongoose.connect('mongodb://localhost:27017/disruptutorDB')
 
 app.get('/', (req, res) => {
   res.render('home');
-  
 })
 
 app.get('/about', (req, res) => {
@@ -30,7 +29,7 @@ app.get('/about', (req, res) => {
 })
 
 // Put this here and the router.get and router.post methods are there
-app.use(register);
+app.use('/users', register);
 
 
 // 404 error route for undefined routes
