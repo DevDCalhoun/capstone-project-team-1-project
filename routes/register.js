@@ -17,15 +17,14 @@ router.post('/register', [
    body('password').isLength({ min: 8 }).withMessage('Password must be min. 8 chars'),
 ], async (req, res) => {
     const errors = validationResult(req);
-
+    
     // If errors are present after 'Validate' render the registration errors into an array
-    if(!errors.isEmpty()) {
+    if(errors.isEmpty()) {
         return res.render('register', {errors: errors.array() });
-        
     }
 
     const {username, email, password } = req.body;
-
+    
     try{
         // Check if user is in the database
         const userExists = await User.findOne({ email });
@@ -35,14 +34,14 @@ router.post('/register', [
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
-
+        
         // Create new User
         const newUser = new User({
             username,
             email,
             password: hashedPassword,
         });
-
+        
         // Write user to the database
         await newUser.save();
         res.send('User registered successfully');
