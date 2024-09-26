@@ -18,12 +18,12 @@ router.post('/register', [
 ], async (req, res) => {
     const errors = validationResult(req);
     
-    // If errors are present after 'Validate' render the registration errors into an array
-    if(errors.isEmpty()) {
+    // If errors are present (Not isEmpty = contains errors) after 'Validate' render the registration errors into an array
+    if(!errors.isEmpty()) {
         return res.render('register', {errors: errors.array() });
     }
 
-    const {username, email, password } = req.body;
+    const {username, email, password } = req.body; 
     
     try{
         // Check if user is in the database
