@@ -8,22 +8,13 @@ const userController = require('../controllers/userController');
 // Route for profile page
 router.get('/profile', isAuthenticated, userController.getProfile);
 
+// Route for  GET request for login page
 router.get('/login', userController.getLogin);
 
+// Route for POST request for login page
 router.post('/login', userController.postLogin);
 
-router.post('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.error("There was an error logging you out: ", err);
-      return res.status(500).send('Internal Server Error');
-    }
-
-  })
-
-  res.clearCookie('session');
-
-  res.redirect('/user/login');
-})
+// Route for POST request for logout page
+router.post('/logout', userController.postLogout);
 
 module.exports = router;

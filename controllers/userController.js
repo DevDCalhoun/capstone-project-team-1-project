@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
+// Error handling and route logic for the user profile route
 exports.getProfile = async (req, res, next) => {
   try {
     const user = await User.findById(req.session.userId).select('-password');
@@ -16,10 +17,12 @@ exports.getProfile = async (req, res, next) => {
   }
 }
 
+// Route logic for user login page
 exports.getLogin = (req, res) => {
   res.render('login');
 }
 
+// Error handling and route logic for the user login route
 exports.postLogin = async (req, res, next) => {
   const {username, password } = req.body;
 
@@ -50,3 +53,17 @@ exports.postLogin = async (req, res, next) => {
     response.status(500).render('login', {error: 'An error occured. Please try again later.'});
   }
 }
+
+exports.postLogout = (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("There was an error logging you out: ", err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+  })
+
+  res.clearCookie('session');
+
+  res.redirect('/user/login');
+};
