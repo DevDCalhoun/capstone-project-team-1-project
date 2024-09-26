@@ -1,0 +1,27 @@
+.navbar-custom {
+  background-color: #004c97;
+}
+
+
+.nav-link, .navbar-brand {
+  color: #fff;
+}
+
+/* Change the color of the navbar toggler lines to white/gray color by inverting default black color */
+.navbar-toggler-icon {
+  filter: invert(1);
+}
+
+.navbar-toggler {
+  background-color: #004c97;
+  border-color: #fff;
+}
+
+
+body {
+  background-color: #f8f9fa;
+}
+
+.header {
+  color: #009cde;
+}
