@@ -63,8 +63,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(errorHandler);
-
 app.get('/', (req, res) => {
   res.render('home');
 })
@@ -79,10 +77,11 @@ app.use('/users', register);
 // Addes routes for users
 app.use('/user', userRoutes);
 
-// 404 error route for undefined routes
-app.use((req, res) => {
-  res.status(404).render('404error')
-})
-
+app.use((req, res, next) => {
+  const error = new Error('Page Not Found');
+  error.status = 404;
+  next(error);
+});
+app.use(errorHandler);
 
 module.exports = app;
