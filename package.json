@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "mocha 'tests/**/*.test.js'"
+    "test": "mocha --exit 'tests/**/*.test.js'"
   },
   "keywords": [],
   "author": "",
