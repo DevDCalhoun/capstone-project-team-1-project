@@ -14,7 +14,7 @@
 
 ## Description
 
-With the current conditions on campus at the University of West Florida, students seeking tutoring/coaching in course-related subjects are finding it increasingly difficult to obtain these services.  Since tutoring services are managed on a departmental basis, methods to schedule help can be very different, difficult to navigate, or outdated.  The aim of this project is to bring the process of tutoring scheduling in a simple web application.  Tutors can no longer waste time sitting in a lab with no students to guide.  Our web-based service provides more flexibility and connectivity between students and tutors.
+With the current conditions on campus at the University of West Florida, students seeking tutoring/coaching in course-related subjects are finding it increasingly difficult to obtain these services.  Since tutoring services are managed on a departmental basis, methods to schedule help can be very different, difficult to navigate, or outdated.  The aim of this project is to bring the process of tutor scheduling in a simple web application.  Tutors can no longer waste time sitting in a lab with no students to guide.  Our web-based service provides more flexibility and connectivity between students and tutors.
 
 #### **DISCLAIMER** - As a capstone project, this web application is not directly affliated with UWF and is currently developed for educational purposes only.  For tutoring at UWF, visit their [Tutoring Services](https://uwf.edu/go/tutoring/).
 
