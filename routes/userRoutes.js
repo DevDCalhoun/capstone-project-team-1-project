@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const User = require('../models/user');
 const isAuthenticated = require('../middleware/auth');
 const userController = require('../controllers/userController');
 
