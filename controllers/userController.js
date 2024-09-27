@@ -56,7 +56,7 @@ exports.postLogin = async (req, res, next) => {
 
 exports.postLogout = (req, res) => {
   req.session.destroy((error) => {
-    if (err) {
+    if (error) {
       console.error("There was an error logging you out: ", error);
       return res.status(500).send('Internal Server Error');
     }
