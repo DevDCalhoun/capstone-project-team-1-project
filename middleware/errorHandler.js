@@ -1,9 +1,9 @@
-// middleware/errorHandler.js
+// Handles errors that may be missed in manual error checking so a page still renders
 
 module.exports = (err, req, res, next) => {
-  console.error(err.stack); // Log the error stack for debugging
+  console.error(err.stack); // Show error on console
 
-  const status = err.status || 500; // Default to 500 if no status is set
+  const status = err.status || 500; // Default error status
   const message = err.message || 'Error found';
 
   // Renders a view based on the status code received from the server
@@ -13,7 +13,7 @@ module.exports = (err, req, res, next) => {
       error: process.env.NODE_ENV === 'production' ? {} : err
     });
   } else {
-    res.status(status).render('500error', { 
+    res.status(status).render('404error', { 
       message: message,
       error: process.env.NODE_ENV === 'production' ? {} : err
     });

@@ -18,16 +18,6 @@ const userSchema = new Schema({
     },
 });
 
-userSchema.pre('save', async function (next) {
-    try {
-        const hashedPassword = await ɵDEFER_BLOCK_DEPENDENCY_INTERCEPTOR.hash(this.passwor, SALT_ROUNDS);
-        this.password = hashedPassword;
-        next();
-    } catch (err) {
-        next(err);
-    }
-})
-
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
