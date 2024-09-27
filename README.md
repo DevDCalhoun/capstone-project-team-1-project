@@ -1,6 +1,6 @@
 # *D*isrup*T*utor
 
-![Logo](images\DisrupTutorLogo-192px.png)
+![Logo](images/DisrupTutorLogo-192px.png)
 
 #### DisrupTutor is a web application that allows students to find and schedule tutors from the Multipurpose Lab (MPL) at the University of West Florida (UWF). For more information about the lab, visit the [MPL](https://uwf.edu/hmcse/departments/computer-science/about-us/facilities/multiplatform-lab/) website.
 
@@ -16,7 +16,7 @@
 
 With the current conditions on campus at the University of West Florida, students seeking tutoring/coaching in course-related subjects are finding it increasingly difficult to obtain these services.  Since tutoring services are managed on a departmental basis, methods to schedule help can be very different, difficult to navigate, or outdated.  The aim of this project is to bring the process of tutoring scheduling in a simple web application.  Tutors can no longer waste time sitting in a lab with no students to guide.  Our web-based service provides more flexibility and connectivity between students and tutors.
 
-#### **DISCLAIMER** - As a capstone project, this web application is not directly affliated with UWF and is currently developed for educational purposes only.  For tutoring services at UWF, visit UWF's [Tutoring Services](https://uwf.edu/go/tutoring/).
+#### **DISCLAIMER** - As a capstone project, this web application is not directly affliated with UWF and is currently developed for educational purposes only.  For tutoring at UWF, visit their [Tutoring Services](https://uwf.edu/go/tutoring/).
 
 ## Getting Started
 ### Prerequsites
