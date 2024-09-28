@@ -9,9 +9,10 @@ module.exports.profileErrors = (req, res, user) => {
 
 module.exports.loginHandler = async (req, res, user) => {
       const { username, password } = req.body;
-
+      
       // Re-renders login page if both username and password are not provided
-      if(!username || !password) {
+      if(!(username || password)) {
+        console.log("here in login handler");
         return res.render('login', {error: 'Please enter both username and password'});
       }
       
@@ -19,7 +20,7 @@ module.exports.loginHandler = async (req, res, user) => {
       if(user) {
         const isMatch = await bcrypt.compare(password, user.password); // used to compare encrypted password with database password
         if(!isMatch) {
-          return res.render('login', {error: 'Invalid login information'});
+          return res.render('home', {error: 'Invalid login information'});
         }
         req.session.userId = user._id;
         req.session.username = user.username;
