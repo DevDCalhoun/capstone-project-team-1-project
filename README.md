@@ -11,6 +11,20 @@
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Docs](https://img.shields.io/badge/documentation-In%20Progress-yellow)
 
+## Table of contents
+
+* [Description](#description)
+* [Getting Started](#getting-started)
+  + [Prerequisites](#prerequisites)
+* [Installing](#installing)
+  + [Node.js Dependencies](#nodejs-dependencies)
+  + [Development Dependencies](#nodejs-dev-dependencies)
+* [Executing program](#executing-program)
+* [Help](#help)
+* [Authors](#authors)
+* [Version History](#version-history)
+* [Licenses](#license)
+* [Acknowledgements](#acknowledgments)
 
 ## Description
 
@@ -19,7 +33,11 @@ With the current conditions on campus at the University of West Florida, student
 #### **DISCLAIMER** - As a capstone project, this web application is not directly affliated with UWF and is currently developed for educational purposes only.  For tutoring at UWF, visit their [Tutoring Services](https://uwf.edu/go/tutoring/).
 
 ## Getting Started
-### Prerequsites
+
+The following are prerquisites to run the web application in development
+
+### Prerequisites
+
 To clone the repository, ensure the following software installed:
 - **Node.js** (v20 or higher) – [Download Node.js](https://nodejs.org/en/download/)
 - **MongoDB** – [Download MongoDB](https://www.mongodb.com/try/download/community)
@@ -37,7 +55,7 @@ Clone the repository:
 git clone https://github.com/uwf-capstone-fa2024/capstone-project-team-1-project.git
 ```
 
-### Installing
+## Installing
 
 Install the project dependencies using Node Package Manager - `npm` - within the project directory.
 
@@ -61,11 +79,21 @@ These packages will be automatically installed with [npm](https://docs.npmjs.com
 * mongoose: An ODM for MongoDB, used for managing schema-based data models.
 * pino: A fast logging library for logging in JSON format, ensuring efficiency and performance.
 
-### Executing program
+### Node.js Dev Dependencies
+
+These packages are used in non-production enviornments:
+* pino-pretty: `npm install pino-pretty --save-dev` - For human-readable plaintext output
+
+## Executing program
 
 The running enviorment for the application is currently in development mode using nodemon
 ``` bash
 nodemon server.js
+```
+
+To output logs from the terminal in a more human-readable format, pipe pino-pretty:
+``` bash
+nodmeon server.js | npx pino-pretty
 ```
 
 ## Help
