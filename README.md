@@ -86,7 +86,7 @@ These packages are used in non-production enviornments:
 
 ## Executing program
 
-The running enviorment for the application is currently in development mode using nodemon
+The running enviornment for the application is currently in development mode using nodemon
 ``` bash
 nodemon server.js
 ```
@@ -108,15 +108,20 @@ command to run if program contains helper info
 - Lead Developer: [Daryl Calhoun](dc128@students.uwf.edu)
 - Developer: [Jason Barker](jb306@students.uwf.edu)
 
+GitHub repository created by:
+- Instructor: [E.L. Fridge](efridge@uwf.edu)
+
 ## Version History
 
 * 0.3
     * Refactor for CRUD
     * Optimize login,register,logout routes
     * UI/UX for web pages
+    * logging http requests and new users
 * 0.2
     * Added database and user schema
-    * User registration
+    * User registration & db population
+    * Mocha testing framework
 * 0.1
     * Initial static web page
     * Navigation Bar
