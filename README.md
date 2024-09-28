@@ -14,6 +14,7 @@
 ## Table of contents
 
 * [Description](#description)
+* [Video Demo](#video-demonstration)
 * [Getting Started](#getting-started)
   + [Prerequisites](#prerequisites)
 * [Installing](#installing)
@@ -23,6 +24,7 @@
   + [Executing tests](#executing-testing)
 * [Help](#help)
 * [Authors](#authors)
+* [Next Version](#version-04-and-higher)
 * [Version History](#version-history)
 * [Licenses](#license)
 * [Acknowledgements](#acknowledgments)
@@ -32,6 +34,11 @@
 With the current conditions on campus at the University of West Florida, students seeking tutoring/coaching in course-related subjects are finding it increasingly difficult to obtain these services.  Since tutoring services are managed on a departmental basis, methods to schedule help can be very different, difficult to navigate, or outdated.  The aim of this project is to bring the process of tutor scheduling in a simple web application.  Tutors can no longer waste time sitting in a lab with no students to guide.  Our web-based service provides more flexibility and connectivity between students and tutors.
 
 #### **DISCLAIMER** - As a capstone project, this web application is not directly affliated with UWF and is currently developed for educational purposes only.  For tutoring at UWF, visit their [Tutoring Services](https://uwf.edu/go/tutoring/).
+
+## Video Demonstration
+
+The video demo is walkthrough of the web application in its current status.  Setup and installation to run the application are provided [below](#getting-started).
+
 
 ## Getting Started
 
@@ -86,6 +93,7 @@ These packages will be automatically installed with [npm](https://docs.npmjs.com
 * mongodb: Official MongoDB driver for connecting your Node.js app to the database.
 * mongoose: An ODM for MongoDB, used for managing schema-based data models.
 * pino: A fast logging library for logging in JSON format, ensuring efficiency and performance.
+* sinon: A testing library for Node.js applications
 
 ### Node.js Dev Dependencies
 
@@ -127,6 +135,15 @@ nodemon --help
 
 GitHub repository created by:
 - Instructor: [E.L. Fridge](efridge@uwf.edu)
+
+## Version 0.4 and higher
+
+In the project's next iteration of development, newer versions add the following functionality:
+
+* 0.4 - 0.6
+    * User features for profile pages
+    * Role-based users
+    * Tutor scheduling
 
 ## Version History
 
