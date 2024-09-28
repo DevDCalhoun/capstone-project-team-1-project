@@ -100,7 +100,7 @@ nodemon server.js
 ```
 
 To output logs from the terminal in a more human-readable format, pipe pino-pretty:
-``` bash
+```
 nodmeon server.js | npx pino-pretty
 ```
 
@@ -113,9 +113,11 @@ Results are displayed to the terminal as pass/fail.
 
 ## Help
 
-Any advice for common problems or issues.
+The following node commands for helper info may aid in resolving setup issues:
 ```
-command to run if program contains helper info
+node --help
+npm --help
+nodemon --help
 ```
 
 ## Authors
@@ -169,5 +171,5 @@ open-source software under the SSPL.
 
 ## Acknowledgments
 
-Inspiration, code snippets, etc.
-* [awesome-readme](https://github.com/matiassingers/awesome-readme)
+Below are resouces that aided in the development of this project:
+* [awesome-readme](https://github.com/matiassingers/awesome-readme) : Markdown code for README.md file
