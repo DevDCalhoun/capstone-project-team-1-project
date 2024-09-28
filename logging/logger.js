@@ -1,23 +1,20 @@
 const pino = require('pino');
 
-const isDevelopment = process.env.NODE_ENV !== 'production';
+// Add custom levels here:
+const levels = {
+    notice: 35, // Between INFO and WARN - Used for new user account logs
+};
 
-// Create a logger instance with pino-pretty transport for non-production
+// Create a logger instance
 const logger = pino({
-  level: process.env.LOG_LEVEL || 'info', // Default log level
-  base: { pid: false },                   // Optionally remove PID from logs
-  timestamp: pino.stdTimeFunctions.isoTime // Add ISO timestamp to logs
-}, isDevelopment
-    ? pino.transport({
-        target: 'pino-pretty',
-        options: {
-          colorize: true,                // Adds colors to logs
-          translateTime: 'SYS:standard', // Adds timestamps in a readable format
-          ignore: 'pid,hostname',        // Removes unnecessary fields
-          levelFirst: true               // Display log level first
-        }
-      })
-    : undefined // For production, no transport is added, and logs are JSON
-);
+    level: process.env.PINO_LOG_LEVEL || 'info',
+    customLevels: levels,
+    formatters: {
+        level: (label) => {
+            return { level: label.toUpperCase() };
+        },
+    },
+
+});
 
 module.exports = logger;

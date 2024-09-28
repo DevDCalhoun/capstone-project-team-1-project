@@ -5,7 +5,7 @@ const app = express();
 const mongoose = require('mongoose');
 const MongoStore = require("connect-mongo");
 const errorHandler = require('./middleware/errorHandler');
-
+const logger = require('./logging/logger'); 
 const bodyParser = require('body-parser');
 const register = require('./routes/register');
 const userRoutes = require('./routes/userRoutes');
@@ -14,6 +14,13 @@ const userRoutes = require('./routes/userRoutes');
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+// Logging
+// Logs each request
+app.use((req, res, next) => {
+  logger.info({ method: req.method, url: req.url }, 'Incoming request');
+  next();
+})
 
 // Allows objects and arrays to be encoded into the URL-encoded format
 app.use(bodyParser.urlencoded({ extended: true }));

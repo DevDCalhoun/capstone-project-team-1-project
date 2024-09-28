@@ -26,11 +26,11 @@
     "mocha": "^10.7.3",
     "mongodb": "^6.9.0",
     "mongoose": "^8.6.3",
-    "pino": "^9.4.0",
-    "pino-pretty": "^11.2.2"
+    "pino": "^9.4.0"
   },
   "devDependencies": {
     "chai": "^5.1.1",
+    "pino-pretty": "^11.2.2",
     "supertest": "^7.0.0"
   }
 }

@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const { body, validationResult } = require('express-validator');
+const logger = require('../logging/logger');
 
 const User = require('../models/user');
 const router = express.Router();
@@ -41,6 +42,11 @@ router.post('/register', [
             email,
             password: hashedPassword,
         });
+
+        // Log new user account created
+        if (newUser) {
+            logger.notice('New user accounted created.');
+        }
         
         // Write user to the database
         await newUser.save();
