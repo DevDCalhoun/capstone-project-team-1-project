@@ -20,6 +20,7 @@
   + [Node.js Dependencies](#nodejs-dependencies)
   + [Development Dependencies](#nodejs-dev-dependencies)
 * [Executing program](#executing-program)
+  + [Executing tests](#executing-testing)
 * [Help](#help)
 * [Authors](#authors)
 * [Version History](#version-history)
@@ -34,7 +35,7 @@ With the current conditions on campus at the University of West Florida, student
 
 ## Getting Started
 
-The following are prerquisites to run the web application in development
+The following are prerquisites to run the web application in development.
 
 ### Prerequisites
 
@@ -48,6 +49,13 @@ To verify installation, run the following terminal commands:
 node -v
 mongo --version
 git --version
+```
+Create a new directory and initialize the node project:
+``` bash
+mkdir project_name
+```
+``` bash
+npm init -y
 ```
 
 Clone the repository:
@@ -95,6 +103,13 @@ To output logs from the terminal in a more human-readable format, pipe pino-pret
 ``` bash
 nodmeon server.js | npx pino-pretty
 ```
+
+### Executing testing
+To run automated unit & integration tests within the test directory:
+``` bash
+npm test
+```
+Results are displayed to the terminal as pass/fail.
 
 ## Help
 
