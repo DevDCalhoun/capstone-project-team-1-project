@@ -32,7 +32,7 @@ exports.postLogin = async (req, res, next) => {
     loginHandler(req, res, user); // error checking and session logic from userErrorHandler.js
   } catch (error) {
     console.error('Login error: ', error);
-    response.status(500).render('login', {error: 'An error occured. Please try again later.'});
+    res.status(500).render('login', {error: 'An error occured. Please try again later.'});
   }
 }
 
