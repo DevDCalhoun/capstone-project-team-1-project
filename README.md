@@ -38,6 +38,7 @@ With the current conditions on campus at the University of West Florida, student
 ## Video Demonstration
 
 The video demo is walkthrough of the web application in its current status.  Setup and installation to run the application are provided [below](#getting-started).
+![Stage 1 Demo](https://youtu.be/-i7RM1oir0A)
 
 
 ## Getting Started
@@ -48,8 +49,10 @@ The following are prerquisites to run the web application in development.
 
 To clone the repository, ensure the following software installed:
 - **Node.js** (v20 or higher) – [Download Node.js](https://nodejs.org/en/download/)
-- **MongoDB** – [Download MongoDB](https://www.mongodb.com/try/download/community)
+- **MongoDB** – [Download MongoDB](https://www.mongodb.com/try/download/community) 
+- **MongoDB Compass** - [Download Compass](https://www.mongodb.com/products/tools/compass)
 - **Git** (Repository cloning) – [Download Git](https://git-scm.com/)
+- **Git for Windows** (Git BASH) - [Download Git for Windows](https://gitforwindows.org/) - For Windows Dev Environment
 
 To verify installation, run the following terminal commands:
 ```bash
@@ -111,6 +114,8 @@ To output logs from the terminal in a more human-readable format, pipe pino-pret
 ```
 nodmeon server.js | npx pino-pretty
 ```
+The terminal outputs that the database is connected upon succuesful execution.  Now open a web browser an enter:
+> 
 
 ### Executing testing
 To run automated unit & integration tests within the test directory:
