@@ -48,7 +48,59 @@ module.exports.seedUsernames = [
     'Parker',
     'Jenna',
     'Eli',
-    'Rachel'
+    'Rachel',
+    'Evan',
+    'Nora',
+    'Logan',
+    'Alexa',
+    'Connor',
+    'Elena',
+    'Gavin',
+    'Sienna',
+    'Brayden',
+    'Madison',
+    'Wyatt',
+    'Lila',
+    'Micah',
+    'Claire',
+    'Sean',
+    'Ellie',
+    'Asher',
+    'Paige',
+    'Tyler',
+    'Leah',
+    'Nathan',
+    'Jasmine',
+    'Jace',
+    'Harper',
+    'Ryder',
+    'Samantha',
+    'Grayson',
+    'Molly',
+    'Xavier',
+    'Ivy',
+    'Colton',
+    'Autumn',
+    'Bentley',
+    'Stella',
+    'Zachary',
+    'Melanie',
+    'Lucas',
+    'Vivian',
+    'Brody',
+    'Daisy',
+    'Spencer',
+    'Elise',
+    'Riley',
+    'Eden',
+    'Austin',
+    'Savannah',
+    'Ezra',
+    'Gabriella',
+    'Chase',
+    'Isla',
+    'Max',
+    'Keira'
 ]
 
 modules.exports.major = [
@@ -64,6 +116,8 @@ modules.exports.schoolYear = [
     'Junior',
     'Senior'
 ]
+
+
 
 
 
