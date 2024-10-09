@@ -32,7 +32,7 @@ const userSchema = new Schema({
     },
     schoolYear: {
         type: String,
-        enum: ['freshman', 'sophomore', 'junior', 'senior'],
+        enum: ['Freshman', 'Sophomore', 'Junior', 'Senior'],
         required: false,
     },
 });

@@ -103,14 +103,14 @@ module.exports.seedUsernames = [
     'Keira'
 ]
 
-modules.exports.major = [
+module.exports.major = [
     'Computer Engineering',
     'Cybersecurity',
     'Information Technology',
     'Software Development'
 ]
 
-modules.exports.schoolYear = [
+module.exports.schoolYear = [
     'Freshman',
     'Sophomore',
     'Junior',
