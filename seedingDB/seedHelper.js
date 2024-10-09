@@ -51,3 +51,10 @@ module.exports.seedUsernames = [
     'Rachel'
 ]
 
+modules.exports.major = [
+    'Freshman',
+    'Sophomore',
+    'Junior',
+    'Senior'
+]
+
