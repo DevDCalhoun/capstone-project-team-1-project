@@ -37,7 +37,7 @@ const userSchema = new Schema({
         required: false,
     },
     isTutor: {
-        type: boolean,
+        type: Boolean,
         default: false
     }
 });
