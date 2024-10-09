@@ -16,6 +16,25 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    major: {
+        type: String,
+        required: false, // Optional, set to true if mandatory
+    },
+    rating: {
+        type: Number,
+        min: 0,
+        max: 5,
+        default: 0, // 0 means not yet rated
+    },
+    reviews: {
+        type: [String], // Array of strings for storing review texts
+        required: false,
+    },
+    schoolYear: {
+        type: String,
+        enum: ['freshman', 'sophomore', 'junior', 'senior'],
+        required: false,
+    },
 });
 
 const User = mongoose.model('User', userSchema);
