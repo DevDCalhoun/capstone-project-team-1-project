@@ -52,9 +52,18 @@ module.exports.seedUsernames = [
 ]
 
 modules.exports.major = [
+    'Computer Engineering',
+    'Cybersecurity',
+    'Information Technology',
+    'Software Development'
+]
+
+modules.exports.schoolYear = [
     'Freshman',
     'Sophomore',
     'Junior',
     'Senior'
 ]
+
+
 
