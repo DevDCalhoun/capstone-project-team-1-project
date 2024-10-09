@@ -44,7 +44,8 @@ const seedUsers = async() => {
             major: `${sample(major)}`,
             rating:Math.floor(Math.random() * 6), // generates a rating between 0 and 5
             reviews: ['A review of the user', 'Another review2 of the user'],
-            schoolYear: `${sample(schoolYear)}`
+            schoolYear: `${sample(schoolYear)}`,
+            isTutor: Math.floor(Math.random() * 2)
         })
         await user.save();
     }
