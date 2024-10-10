@@ -33,6 +33,38 @@
               <label for="confirm-password" class="form-label">Password</label>
               <input type="password" class="form-control" id="confirm-password" name="confirm-password" placeholder="Confirm password" required>
           </div>
+          <div>
+            <label for="major">Major:</label>
+            <select id="major" name="major">
+                <option value="Computer Engineering">Computer Engineering</option>
+                <option value="Cybersecurity">Cybersecurity</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Software Development">Software Development</option>
+            </select>
+        </div>
+        <div>
+          <p>Select Your School Year:</p>
+          <div>
+              <input type="radio" id="freshman" name="schoolYear" value="Freshman" required>
+              <label for="freshman">Freshman</label>
+          </div>
+          <div>
+              <input type="radio" id="sophomore" name="schoolYear" value="Sophomore">
+              <label for="sophomore">Sophomore</label>
+          </div>
+          <div>
+              <input type="radio" id="junior" name="schoolYear" value="Junior">
+              <label for="junior">Junior</label>
+          </div>
+          <div>
+              <input type="radio" id="senior" name="schoolYear" value="Senior">
+              <label for="senior">Senior</label>
+          </div>
+      </div>
+      <div>
+        <label for="isTutor">Interested in becoming a tutor?</label>
+        <input type="checkbox" id="isTutor" name="isTutor" value="true">
+    </div>
             
             <button type="submit" class="btn btn-primary w-100">Register</button>
         </form>
