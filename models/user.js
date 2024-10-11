@@ -1,3 +1,4 @@
+const { boolean } = require('joi');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema; // shortcut to mongoose
 
@@ -32,9 +33,13 @@ const userSchema = new Schema({
     },
     schoolYear: {
         type: String,
-        enum: ['freshman', 'sophomore', 'junior', 'senior'],
+        enum: ['Freshman', 'Sophomore', 'Junior', 'Senior'],
         required: false,
     },
+    isTutor: {
+        type: Boolean,
+        default: false
+    }
 });
 
 const User = mongoose.model('User', userSchema);
