@@ -9,6 +9,7 @@ const logger = require('./logging/logger');
 const bodyParser = require('body-parser');
 const register = require('./routes/register');
 const userRoutes = require('./routes/userRoutes');
+const User = require('./models/user');
 
 // Middleware
 app.use(express.static("public"));
@@ -77,6 +78,16 @@ app.get('/', (req, res) => {
 app.get('/about', (req, res) => {
   res.render('about');
 })
+
+app.get('/search', async (req, res) => {
+  try {
+    const tutors = await User.find({ isTutor: true });
+    res.render('search', { tutors });
+  }
+  catch (error) {
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 // Put this here and the router.get and router.post methods are there
 app.use('/users', register);
