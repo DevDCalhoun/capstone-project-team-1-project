@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema; // shortcut to mongoose
 
 const availabilitySchema = new Schema({
   day: {
@@ -16,6 +17,4 @@ const availabilitySchema = new Schema({
   }
 })
 
-const Availability = mongoose.model('Availability', availabilitySchema);
-
-module.exports = Availability;
+module.exports = availabilitySchema;

@@ -1,7 +1,7 @@
 const { boolean } = require('joi');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema; // shortcut to mongoose
-const User = require('./availability');
+const availabilitySchema = require('./availability');
 
 const userSchema = new Schema({
     username: {
@@ -41,7 +41,7 @@ const userSchema = new Schema({
         default: false
     },
     availability: {
-        type: [availability],
+        type: [availabilitySchema],
         required: false,
     },
     appointmentsAsStudent: [{
