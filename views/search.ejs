@@ -23,7 +23,7 @@
                         <p class="card-text"><strong>Year:</strong> <%= tutor.schoolYear || "Not specified" %></p>
                         
                         <!-- Redirect to the appointment page with the tutorId in the URL -->
-                        <a href="/appointments/new?tutorId=<%= tutor._id %>" class="btn btn-primary">Set Appointment</a>
+                        <a href="/appointments/make-appointment?tutorId=<%= tutor._id %>" class="btn btn-primary">Set Appointment</a>
                     </div>
                 </div>
             </div>
