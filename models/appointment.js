@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const appointmentSchema = new Schema({
-  student: {
+  studentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-  tutor: {
+  tutorId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
