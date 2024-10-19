@@ -54,9 +54,9 @@ router.post('/make-appointment', isAuthenticated, async (req, res) => {
             logger.notice('New tutoring appointment created.');
         }
 
-        res.send('Appointment waiting confirmation from tutor.');
+        //res.send('Appointment waiting confirmation from tutor.');
         // Redirect to a confirmation page or appointments list
-        //res.redirect(''); // Redirect to a page showing confirmed appointments
+        res.redirect('/user/profile'); // Redirect to profile page showing confirmed appointments
     } catch (error) {
         console.error('Error creating appointment:', error);
         res.status(500).send('Server error');

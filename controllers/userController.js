@@ -1,17 +1,21 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
+const Appointment = require('../models/appointment.js');
 const { profileErrors, loginHandler } = require('../middleware/userErrorHandler.js');
 
 // Error handling and route logic for the user profile route
 exports.getProfile = async (req, res, next) => {
   try {
     // Finds user in database but does not look at the password field
-    const user = await User.findById(req.session.userId);
+    const user = await User.findById(req.session.userId).select('-password');
 
-    profileErrors(req, res, user); // error checking logic from userErrorHandler.js
-    
-    // Renders user profile with 'user' entry from database
-    res.render('userProfile', { user });
+    // Find all appointments where the user is the student
+    const appointments = await Appointment.find({ studentId: req.session.userId })
+      .populate('tutorId') // Populate the tutor details
+      .sort({ date: -1 }); // Sort appointments by date in descending order
+
+    // Render user profile with 'user' and 'appointments' entries from database
+    res.render('userProfile', { user, appointments });
   } catch (error) {
     console.error("Profile error: ", error);
     res.status(500).send('Internal server error');
