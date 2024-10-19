@@ -21,7 +21,9 @@
                         <p class="card-text"><strong>Major:</strong> <%= tutor.major || "Not specified" %></p>
                         <p class="card-text"><strong>Rating:</strong> <%= tutor.rating %> / 5</p>
                         <p class="card-text"><strong>Year:</strong> <%= tutor.schoolYear || "Not specified" %></p>
-                        <a href="#" class="btn btn-primary">Make Appointment</a>
+                        
+                        <!-- Redirect to the appointment page with the tutorId in the URL -->
+                        <a href="/appointments/make-appointment?tutorId=<%= tutor._id %>" class="btn btn-primary">Set Appointment</a>
                     </div>
                 </div>
             </div>
