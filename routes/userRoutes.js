@@ -16,4 +16,6 @@ router.post('/login', userController.postLogin);
 // Route for POST request for logout page
 router.post('/logout', userController.postLogout);
 
+
+
 module.exports = router;

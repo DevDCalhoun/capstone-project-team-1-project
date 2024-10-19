@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 const register = require('./routes/register');
 const userRoutes = require('./routes/userRoutes');
 const User = require('./models/user');
+const AvailabilityManager = require('./classes/availabilityManager');
 
 // Middleware
 app.use(express.static("public"));
@@ -94,6 +95,38 @@ app.use('/users', register);
 
 // Addes routes for users
 app.use('/user', userRoutes);
+
+app.get('/user/availability', (req, res) => {
+  if(!req.session.userId) {
+    return res.redirect('/user/login');
+  }
+
+  res.render('availability', { userId: req.session.userId }); 
+})
+
+app.post('/user/availability', async (req, res) => {
+  const userId = req.session.userId;
+  const availability = req.body.availability;
+
+  const availabilityManager = new AvailabilityManager(userId);
+
+  try {
+    for (let day in availability) {
+      if(availability[day].available == true) {
+        const startTime = availability[day].startTime;
+        const endTime = availability[day].endTime;
+        await availabilityManager.updateAvailability(day, startTime, endTime);
+      }
+      else {
+        await availabilityManager.removeAvailability(day);
+      }
+    }
+
+    res.redirect('/user/profile');
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+})
 
 app.use((req, res, next) => {
   const error = new Error('Page Not Found');
