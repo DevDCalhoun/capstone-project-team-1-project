@@ -9,6 +9,7 @@ const logger = require('./logging/logger');
 const bodyParser = require('body-parser');
 const register = require('./routes/register');
 const userRoutes = require('./routes/userRoutes');
+const makeAppointment = require('./routes/make-appointment');
 const User = require('./models/user');
 
 // Middleware
@@ -96,7 +97,7 @@ app.use('/users', register);
 app.use('/user', userRoutes);
 
 // Adds routing for making appointments
-app.use('/appointments', make-appointment);
+app.use('/appointments', makeAppointment);
 
 app.use((req, res, next) => {
   const error = new Error('Page Not Found');
