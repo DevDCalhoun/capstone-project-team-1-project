@@ -7,49 +7,32 @@ class AvailabilityManager {
     this.userId = userId;
   }
 
-  async addAvailability(day, startTime, endTime) {
+  async updateAvailability(day, startTime, endTime) {
     try {
       const user = await User.findById(this.userId);
       
       if(!user) {
         throw new Error('User not found');
       }
-
+      
       if(!user.availability) {
         user.availability = [];
       }
 
-      const newAvailability = { day, startTime, endTime };
-
-      user.availability.push(newAvailability);
-
-      await user.save();
-    } catch (error) {
-      console.error("Error encountered while adding availability", error.message);
-      throw error;
-    }
-  }
-
-  async updateAvailability(day, newStartTime, newEndTime) {
-    try {
-      const user = await User.findById(this.userId);
-
-      if(!user) {
-        throw new Error('User not found');
-      }
-
       const availability = user.availability.find(avail => avail.day === day);
-      if(!availability) {
-        throw new Error(`Availability not found for ${day}`);
+
+      if(availability) {
+        availability.startTime = startTime;
+        availability.endTime = endTime;
       }
-
-      availability.startTime = newStartTime;
-      availability.endTime = newEndTime;
-
+      else {
+        user.availability.push({ day, startTime, endTime });
+      }
+      
       await user.save();
       return user;
     } catch (error) {
-      console.error('Error updating availability', error.message);
+      console.error("Error encountered while adding availability", error.message);
       throw error;
     }
   }
