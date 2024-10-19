@@ -3,6 +3,7 @@ const router = express.Router();
 const isAuthenticated = require('../middleware/auth');
 const User = require('../models/user');
 const Appointment = require('../models/appointment');
+const logger = require('../logging/logger');
 
 // GET route to display the appointment page (requires authentication)
 router.get('/make-appointment', isAuthenticated, async (req, res) => {
@@ -47,6 +48,11 @@ router.post('/make-appointment', isAuthenticated, async (req, res) => {
 
         // Save the appointment to the database
         await newAppointment.save();
+
+        // Log new appointment
+        if (newAppointment) {
+            logger.notice('New tutoring appointment created.');
+        }
 
         res.send('Appointment waiting confirmation from tutor.');
         // Redirect to a confirmation page or appointments list
