@@ -10,6 +10,82 @@
 </head>
 <body>
   <%- include('partials/navbar'); %>
+
+  <!-- Search form button -->
+  <div class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#searchForm" aria-expanded="false" aria-controls="searchForm">
+    <button>
+      Search Parameters
+    </button>
+  </div>
+
+  <!-- Search Form -->
+  <div class="collapse" id="searchForm">
+    <div class="card card-body">
+      <form action="/search" method="POST">
+        <!-- Form row -->
+        <div class="row">
+          <!-- Username -->
+           <div class="col-md-4 mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" name="username" id="username" class="form-control">
+           </div>
+
+           <!-- Major -->
+          <div class="col-md-4 mb-3">
+            <label for="major" class="form-label">Major</label>
+            <input type="text" name="major" id="major" class="form-control">
+          </div>
+
+          <!-- Rating -->
+          <div class="col-md-4 mb-3">
+            <label for="rating" class="form-label">Minimum Rating (0-5)</label>
+            <input type="number" name="rating" id="rating" min="0" max="5" step="1" class="form-control">
+          </div>
+        </div>
+
+        <!-- Form row -->
+        <div class="row">
+
+          <!-- Checked if tutor needs to have reviews -->
+          <div class="col-md-4 mb-3">
+            <div class="form-check mt-4">
+              <input class="form-check-input" type="checkbox" name="hasReviews">
+              <label for="form-check-label" for="hasReviews">
+                Has Reviews
+              </label>
+            </div>
+          </div>
+
+          <!-- School Review -->
+          <div class="col-md-4 mb-3">
+            <label for="schoolYear" class="form-label">School Year</label>
+            <select name="schoolYear" id="schoolYear" class="form-select">
+              <option value="">Any</option>
+              <option value="Freshman">Freshman</option>
+              <option value="Sophomore">Sophomore</option>
+              <option value="Juinor">Juinor</option>
+              <option value="Senior">Senior</option>
+            </select>
+          </div>
+
+          <!-- Availability -->
+          <div class="mb-3">
+            <label for="form-label">Availability</label><br>
+            <% days.forEach(function(day) {%>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="availability[]" value="<%= day %>" id="<%= day %>">
+                <label class="form-check-label" for="<%= day %>"><%= day %></label>
+              </div>
+            <% }); %>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tutor Information Section -->
   <div class="container mt-5">
     <h2 class="text-center mb-4">Available Tutors</h2>
     <div class="row">

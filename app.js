@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 const register = require('./routes/register');
 const userRoutes = require('./routes/userRoutes');
 const makeAppointment = require('./routes/make-appointment');
+const SearchParameters = require('./classes/search');
 const User = require('./models/user');
 
 // Middleware
@@ -83,12 +84,28 @@ app.get('/about', (req, res) => {
 app.get('/search', async (req, res) => {
   try {
     const tutors = await User.find({ isTutor: true });
-    res.render('search', { tutors });
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', ' Friday', 'Saturday', 'Sunday'];
+    res.render('search', { tutors, days });
   }
   catch (error) {
     res.status(500).send("Internal Server Error");
   }
 });
+
+app.post('/search', async (req, res) => {
+  try {
+    const searchParams = new SearchParameters(req.body);
+    const query = searchParams.createQuery();
+
+    const tutors = await User.find(query);
+
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    res.render('search', { tutors, days, searchParams: req.body });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+})
 
 // Route to register.js
 app.use('/users', register);
