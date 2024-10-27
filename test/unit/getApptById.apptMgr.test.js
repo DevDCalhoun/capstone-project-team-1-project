@@ -1,6 +1,5 @@
 const AppointmentManager = require('../../classes/appointmentManager');
 const Appointment = require('../../models/appointment');
-const logger = require('../../logging/logger');
 
 jest.mock('../../models/appointment');
 jest.mock('../../logging/logger');

@@ -1,4 +1,5 @@
 const Appointment = require('../models/appointment');
+const mongoose = require('mongoose');
 const User = require('../models/user');
 const logger = require('../logging/logger');
 
@@ -43,6 +44,24 @@ class AppointmentManager {
             return appointment;
         } catch (error) {
             console.error("Error retrieving appointment:", error.message);
+            throw error;
+        }
+    }
+
+      // Retrieve all appointments for a specific user
+      async getAppointmentsByUser(userId) {
+        try {
+            // Validate userId format using mongoose's ObjectId checker
+            if(!mongoose.Types.ObjectId.isValid(userId)) {
+                throw new Error("Invalid user ID");
+            }
+
+            const appointments = await Appointment.find({
+                $or: [{ studentId: userId }, { tutorId: userId }]
+            });
+            return appointments;
+        } catch (error) {
+            console.error("Error retrieving appointments:", error.message);
             throw error;
         }
     }
