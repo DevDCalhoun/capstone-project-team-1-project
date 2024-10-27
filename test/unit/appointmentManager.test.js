@@ -129,4 +129,66 @@ describe('AppointmentManager.createAppointment', () => {
                 .rejects.toThrow("Invalid user ID");
         });
     });
+
+    describe('updateAppointment', () => {
+        it('should update an existing appointment', async () => {
+            const mockUpdatedAppointment = {
+                _id: 'appointmentId123',
+                studentId: 'studentId123',
+                tutorId: 'tutorId123',
+                day: new Date(),
+                time: '12:00',
+                details: 'Updated details'
+            };
+
+            Appointment.findByIdAndUpdate = jest.fn().mockResolvedValue(mockUpdatedAppointment);
+
+            const updateData = { time: '12:00', details: 'Updated details' };
+            const result = await appointmentManager.updateAppointment('appointmentId123', updateData);
+
+            expect(result).toEqual(mockUpdatedAppointment);
+            expect(Appointment.findByIdAndUpdate).toHaveBeenCalledWith(
+                'appointmentId123',
+                updateData,
+                { new: true }
+            );
+        });
+
+        it('should throw an error if appointment update fails', async () => {
+            Appointment.findByIdAndUpdate = jest.fn().mockResolvedValue(null);
+
+            const updateData = { time: '12:00', details: 'Updated details' };
+            await expect(appointmentManager.updateAppointment('appointmentId123', updateData))
+                .rejects.toThrow('Appointment not found');
+            expect(Appointment.findByIdAndUpdate).toHaveBeenCalledWith(
+                'appointmentId123',
+                updateData,
+                { new: true }
+            );
+        });
+    });
+
+    describe('deleteAppointment', () => {
+        it('should delete an appointment by ID successfully', async () => {
+            const mockDeletedAppointment = {
+                _id: 'appointmentId123',
+                studentId: 'studentId123',
+                tutorId: 'tutorId123'
+            };
+
+            Appointment.findByIdAndDelete = jest.fn().mockResolvedValue(mockDeletedAppointment);
+
+            const result = await appointmentManager.deleteAppointment('appointmentId123');
+            expect(result).toBe(`Appointment with ID appointmentId123 deleted successfully.`);
+            expect(Appointment.findByIdAndDelete).toHaveBeenCalledWith('appointmentId123');
+        });
+
+        it('should throw an error if appointment deletion fails', async () => {
+            Appointment.findByIdAndDelete = jest.fn().mockResolvedValue(null);
+
+            await expect(appointmentManager.deleteAppointment('appointmentId123'))
+                .rejects.toThrow('Appointment not found');
+            expect(Appointment.findByIdAndDelete).toHaveBeenCalledWith('appointmentId123');
+        });
+    });
 });
