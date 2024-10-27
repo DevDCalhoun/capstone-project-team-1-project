@@ -32,6 +32,20 @@ class AppointmentManager {
             throw error;
         }
     }
+
+    // Retrieve an appointment by ID
+    async getAppointmentById(appointmentId) {
+        try {
+            const appointment = await Appointment.findById(appointmentId);
+            if (!appointment) {
+                throw new Error('Appointment not found');
+            }
+            return appointment;
+        } catch (error) {
+            console.error("Error retrieving appointment:", error.message);
+            throw error;
+        }
+    }
 }
 
 module.exports = AppointmentManager;
