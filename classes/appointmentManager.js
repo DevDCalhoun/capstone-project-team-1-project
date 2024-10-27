@@ -1,5 +1,5 @@
-const Appointment = require('./appointment');
-const User = require('../models/appointment');
+const Appointment = require('../models/appointment');
+const User = require('../models/user');
 const logger = require('../logging/logger');
 
 class AppointmentManager {
@@ -33,3 +33,5 @@ class AppointmentManager {
         }
     }
 }
+
+module.exports = AppointmentManager;
