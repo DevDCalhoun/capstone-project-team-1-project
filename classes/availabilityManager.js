@@ -45,7 +45,7 @@ class AvailabilityManager {
 
     user.availability.filter(avail => avail.day !== day);
     await user.save();
-    return user;
+    return user;        // Testing code REMOVE
   }
 }
 

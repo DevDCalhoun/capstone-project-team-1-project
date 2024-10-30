@@ -39,6 +39,7 @@ router.post('/availability', async (req, res) => {
         await availabilityManager.updateAvailability(day, startTime, endTime);
       }
       else {
+        // removeAvailability returns user
         await availabilityManager.removeAvailability(day);
       }
     }
