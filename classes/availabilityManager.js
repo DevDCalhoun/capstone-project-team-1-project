@@ -43,7 +43,7 @@ class AvailabilityManager {
       throw new Error('User not found');
     }
 
-    user.availability.filter(avail => avail.day !== day);
+    user.availability = user.availability.filter(avail => avail.day !== day);
     await user.save();
     return user;        // Testing code REMOVE
   }
