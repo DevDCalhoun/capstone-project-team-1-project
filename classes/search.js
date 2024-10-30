@@ -17,6 +17,7 @@ class SearchParameters {
     const query = {};
 
     if(username) {
+      const cleanUsername = this.checkText(cleanUsername);
       query.username = { $regex: username, $options: 'i'};
     }
     if(major) {
@@ -37,6 +38,10 @@ class SearchParameters {
     }
 
     return query;
+  }
+
+  checkText(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
   }
 }
 
