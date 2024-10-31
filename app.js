@@ -56,9 +56,11 @@ const sessionConfig = {
   store,
   name: 'session',
   secret,
-  resave: false,
+  resave: false,  // Prevents saving session if it wasn't modified
+  saveUninitialized: false, // Only save sessions if they contain data
   cookie: {
     httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7
   }
