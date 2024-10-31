@@ -3,65 +3,67 @@ const Appointment = require('../../models/appointment');
 const mongoose = require('mongoose');
 const logger = require('../../logging/logger');
 
-// Mocking Appointment and logger
+// Mock Appointment and logger
 jest.mock('../../models/appointment');
 jest.mock('../../logging/logger');
 
-describe('AppointmentManager.createAppointment', () => {
+describe('AppointmentManager with Admin Permissions', () => {
     let appointmentManager;
+    const mockUserId = 'dummyUserId';
+    const mockAppointmentId = 'appointmentId123';
 
-    beforeEach(() => {        
-        // Initialize AppointmentManager with a dummy user ID
-        appointmentManager = new AppointmentManager('dummyUserId');
-
-        // Clear all mock calls before each test
+    beforeEach(() => {
+        // Initialize AppointmentManager with admin role for all tests
+        appointmentManager = new AppointmentManager(mockUserId, 'admin');
         jest.clearAllMocks();
     });
 
-    it('should create and return a new appointment successfully', async () => {
+    describe('createAppointment', () => {
+        it('should create and return a new appointment successfully', async () => {
         // Mock the save method to simulate a successful save
-        const mockAppointmentData = {
-            studentId: 'studentId123',
-            tutorId: 'tutorId123',
-            day: new Date(),
-            time: '10:00',
-            details: 'JavaScript tutoring session'
-        };
-        
-        Appointment.mockImplementation(() => ({
-            ...mockAppointmentData,
-            save: jest.fn().mockResolvedValue(mockAppointmentData)
-        }));
+            const mockAppointmentData = {
+                studentId: 'studentId123',
+                tutorId: 'tutorId123',
+                day: new Date(),
+                time: '10:00',
+                details: 'JavaScript tutoring session'
+            };
+
+            Appointment.mockImplementation(() => ({
+                ...mockAppointmentData,
+                save: jest.fn().mockResolvedValue(mockAppointmentData)
+            }));
 
         // Call the createAppointment method
-        const result = await appointmentManager.createAppointment(
-            mockAppointmentData.studentId,
-            mockAppointmentData.tutorId,
-            mockAppointmentData.day,
-            mockAppointmentData.time,
-            mockAppointmentData.details
-        );
+            const result = await appointmentManager.createAppointment(
+                mockAppointmentData.studentId,
+                mockAppointmentData.tutorId,
+                mockAppointmentData.day,
+                mockAppointmentData.time,
+                mockAppointmentData.details
+            );
 
         // Verify that the result matches the mocked appointment data
-        expect(result).toEqual(expect.objectContaining(mockAppointmentData));
+            expect(result).toEqual(expect.objectContaining(mockAppointmentData));
 
         // Verify that the logger was called with the notice message
-        expect(logger.notice).toHaveBeenCalledWith("New tutoring appointment created.");
-    });
+            expect(logger.notice).toHaveBeenCalledWith("New tutoring appointment created.");
+        });
 
-    it('should throw an error if appointment creation fails', async () => {
+        it('should throw an error if appointment creation fails', async () => {
         // Simulate an error by making save throw an error
-        Appointment.mockImplementation(() => ({
-            save: jest.fn().mockRejectedValue(new Error("Appointment creation failed"))
-        }));
+            Appointment.mockImplementation(() => ({
+                save: jest.fn().mockRejectedValue(new Error("Appointment creation failed"))
+            }));
 
         // Call createAppointment and expect it to throw an error
-        await expect(appointmentManager.createAppointment(
-            'studentId123', 'tutorId123', new Date(), '10:00', 'JavaScript tutoring session'
-        )).rejects.toThrow("Appointment creation failed");
+            await expect(appointmentManager.createAppointment(
+                'studentId123', 'tutorId123', new Date(), '10:00', 'JavaScript tutoring session'
+            )).rejects.toThrow("Appointment creation failed");
 
         // Verify that the logger was not called due to the error
-        expect(logger.notice).not.toHaveBeenCalled();
+            expect(logger.notice).not.toHaveBeenCalled();
+        });
     });
 
     describe('getAppointmentById', () => {
@@ -133,7 +135,7 @@ describe('AppointmentManager.createAppointment', () => {
     describe('updateAppointment', () => {
         it('should update an existing appointment', async () => {
             const mockUpdatedAppointment = {
-                _id: 'appointmentId123',
+                _id: mockAppointmentId,
                 studentId: 'studentId123',
                 tutorId: 'tutorId123',
                 day: new Date(),
@@ -144,11 +146,11 @@ describe('AppointmentManager.createAppointment', () => {
             Appointment.findByIdAndUpdate = jest.fn().mockResolvedValue(mockUpdatedAppointment);
 
             const updateData = { time: '12:00', details: 'Updated details' };
-            const result = await appointmentManager.updateAppointment('appointmentId123', updateData);
+            const result = await appointmentManager.updateAppointment(mockAppointmentId, updateData);
 
             expect(result).toEqual(mockUpdatedAppointment);
             expect(Appointment.findByIdAndUpdate).toHaveBeenCalledWith(
-                'appointmentId123',
+                mockAppointmentId,
                 updateData,
                 { new: true }
             );
@@ -158,10 +160,10 @@ describe('AppointmentManager.createAppointment', () => {
             Appointment.findByIdAndUpdate = jest.fn().mockResolvedValue(null);
 
             const updateData = { time: '12:00', details: 'Updated details' };
-            await expect(appointmentManager.updateAppointment('appointmentId123', updateData))
+            await expect(appointmentManager.updateAppointment(mockAppointmentId, updateData))
                 .rejects.toThrow('Appointment not found');
             expect(Appointment.findByIdAndUpdate).toHaveBeenCalledWith(
-                'appointmentId123',
+                mockAppointmentId,
                 updateData,
                 { new: true }
             );
@@ -192,34 +194,25 @@ describe('AppointmentManager.createAppointment', () => {
         });
     });
 
-    describe('AppointmentManager.setAppointmentStatus', () => {
-        let appointmentManager;
-        const mockAppointmentId = 'appointmentId123';
-        const mockUserId = 'userId123';
-    
-        beforeEach(() => {
-            appointmentManager = new AppointmentManager(mockUserId);
-            jest.clearAllMocks();
-        });
-    
+    describe('setAppointmentStatus', () => {
         it('should update the status to Confirmed successfully', async () => {
             const mockAppointment = {
                 _id: mockAppointmentId,
                 status: 'Pending',
                 save: jest.fn().mockResolvedValue(true),
             };
-    
+
             Appointment.findById = jest.fn().mockResolvedValue(mockAppointment);
-    
+
             await appointmentManager.setAppointmentStatus(mockAppointmentId, 'Confirmed');
-    
+
             expect(Appointment.findById).toHaveBeenCalledWith(mockAppointmentId);
             expect(mockAppointment.status).toBe('Confirmed');
             expect(mockAppointment.save).toHaveBeenCalled();
             expect(logger.info).toHaveBeenCalledWith(`Appointment ${mockAppointmentId} status changed to Confirmed`);
         });
-    
-        it('should update the status to Completed successfully', async () => {
+
+        it('should update the status to Cancelled successfully', async () => {
             const mockAppointment = {
                 _id: mockAppointmentId,
                 status: 'Confirmed',
@@ -228,27 +221,27 @@ describe('AppointmentManager.createAppointment', () => {
     
             Appointment.findById = jest.fn().mockResolvedValue(mockAppointment);
     
-            await appointmentManager.setAppointmentStatus(mockAppointmentId, 'Completed');
+            await appointmentManager.setAppointmentStatus(mockAppointmentId, 'Cancelled');
     
             expect(Appointment.findById).toHaveBeenCalledWith(mockAppointmentId);
-            expect(mockAppointment.status).toBe('Completed');
+            expect(mockAppointment.status).toBe('Cancelled');
             expect(mockAppointment.save).toHaveBeenCalled();
-            expect(logger.info).toHaveBeenCalledWith(`Appointment ${mockAppointmentId} status changed to Completed`);
+            expect(logger.info).toHaveBeenCalledWith(`Appointment ${mockAppointmentId} status changed to Cancelled`);
         });
-    
+
         it('should throw an error for an invalid status', async () => {
             await expect(appointmentManager.setAppointmentStatus(mockAppointmentId, 'InvalidStatus'))
                 .rejects.toThrow("Invalid status: InvalidStatus. Must be one of: Pending, Confirmed, Completed, Cancelled");
-    
-            expect(Appointment.findById).not.toHaveBeenCalled();  // Should not call findById if the status is invalid
+
+            expect(Appointment.findById).not.toHaveBeenCalled();
         });
-    
+
         it('should throw an error if the appointment is not found', async () => {
             Appointment.findById = jest.fn().mockResolvedValue(null);
-    
+
             await expect(appointmentManager.setAppointmentStatus(mockAppointmentId, 'Confirmed'))
                 .rejects.toThrow("Appointment not found");
-    
+
             expect(Appointment.findById).toHaveBeenCalledWith(mockAppointmentId);
             expect(logger.info).not.toHaveBeenCalled();
         });
