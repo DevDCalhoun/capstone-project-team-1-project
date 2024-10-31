@@ -98,6 +98,34 @@ class AppointmentManager {
             throw error;
         }
     }
+
+     // New method to set appointment status
+     async setAppointmentStatus(appointmentId, newStatus) {
+        const validStatuses = ['Pending', 'Confirmed', 'Completed', 'Cancelled'];
+
+        // Check if the provided status is valid
+        if (!validStatuses.includes(newStatus)) {
+            throw new Error(`Invalid status: ${newStatus}. Must be one of: ${validStatuses.join(', ')}`);
+        }
+
+        try {
+            const appointment = await Appointment.findById(appointmentId);
+            if (!appointment) {
+                throw new Error("Appointment not found");
+            }
+
+            // Update the status
+            appointment.status = newStatus;
+            await appointment.save();
+
+            // Log the status update with pino
+            logger.info(`Appointment ${appointmentId} status changed to ${newStatus}`);
+            return appointment;
+        } catch (error) {
+            console.error("Error setting appointment status:", error.message);
+            throw error;
+        }
+    }
 }
 
 module.exports = AppointmentManager;
