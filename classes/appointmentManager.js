@@ -17,7 +17,8 @@ class AppointmentManager {
                 tutorId,
                 day,
                 time,
-                details
+                details,
+                status: 'Pending'   // Set default status as Pending
             });
             // Save the appointment to the database
             await newAppointment.save();
