@@ -13,4 +13,3 @@ module.exports = function authorizeRole(...allowedRoles) {
     };
 };
 
-module.exports = authorizeRole;
