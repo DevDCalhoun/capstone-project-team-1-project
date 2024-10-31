@@ -5,7 +5,7 @@ const logger = require('../logging/logger');
 
 class AppointmentManager {
     // Constructor to initialize the appointment manager with userID(SessionID)
-    constructor(userId) {
+    constructor(userId, userRole) {
         this.userId = userId;
         this.userRole = userRole;
     }

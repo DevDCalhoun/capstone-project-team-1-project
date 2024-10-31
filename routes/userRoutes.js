@@ -78,7 +78,8 @@ router.get('/make-appointment', isAuthenticated, async (req, res) => {
 router.post('/make-appointment', isAuthenticated, authorizeRole('student', 'tutor', 'admin'), async (req, res) => {
   try {
       const { tutorId, date, time, details } = req.body;
-      const studentId = req.session.userId; // Get the logged-in student's ID from the session
+      const studentId = req.session.userId;   // Get the logged-in student's ID from the session
+      const userRole = req.session.userRole;  // Retrieve the user's role from the session
 
       // Find the tutor by ID to ensure they exist
       const tutor = await User.findById(tutorId);
@@ -92,7 +93,7 @@ router.post('/make-appointment', isAuthenticated, authorizeRole('student', 'tuto
       }
 
       // Create a new appointment
-      const appointmentManager = new AppointmentManager(studentId);
+      const appointmentManager = new AppointmentManager(studentId, userRole);
       const newAppointment = await appointmentManager.createAppointment(
           studentId,
           tutorId,
