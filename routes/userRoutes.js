@@ -99,7 +99,7 @@ router.post('/make-appointment', isAuthenticated, authorizeRole('student', 'tuto
           tutorId,
           date,
           time,
-          details || 'General inquiry',
+          details || 'General Inquiry',
       );
 
       // Save the appointment to the database
