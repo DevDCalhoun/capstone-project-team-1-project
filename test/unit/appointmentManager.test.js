@@ -191,4 +191,66 @@ describe('AppointmentManager.createAppointment', () => {
             expect(Appointment.findByIdAndDelete).toHaveBeenCalledWith('appointmentId123');
         });
     });
+
+    describe('AppointmentManager.setAppointmentStatus', () => {
+        let appointmentManager;
+        const mockAppointmentId = 'appointmentId123';
+        const mockUserId = 'userId123';
+    
+        beforeEach(() => {
+            appointmentManager = new AppointmentManager(mockUserId);
+            jest.clearAllMocks();
+        });
+    
+        it('should update the status to Confirmed successfully', async () => {
+            const mockAppointment = {
+                _id: mockAppointmentId,
+                status: 'Pending',
+                save: jest.fn().mockResolvedValue(true),
+            };
+    
+            Appointment.findById = jest.fn().mockResolvedValue(mockAppointment);
+    
+            await appointmentManager.setAppointmentStatus(mockAppointmentId, 'Confirmed');
+    
+            expect(Appointment.findById).toHaveBeenCalledWith(mockAppointmentId);
+            expect(mockAppointment.status).toBe('Confirmed');
+            expect(mockAppointment.save).toHaveBeenCalled();
+            expect(logger.info).toHaveBeenCalledWith(`Appointment ${mockAppointmentId} status changed to Confirmed`);
+        });
+    
+        it('should update the status to Completed successfully', async () => {
+            const mockAppointment = {
+                _id: mockAppointmentId,
+                status: 'Confirmed',
+                save: jest.fn().mockResolvedValue(true),
+            };
+    
+            Appointment.findById = jest.fn().mockResolvedValue(mockAppointment);
+    
+            await appointmentManager.setAppointmentStatus(mockAppointmentId, 'Completed');
+    
+            expect(Appointment.findById).toHaveBeenCalledWith(mockAppointmentId);
+            expect(mockAppointment.status).toBe('Completed');
+            expect(mockAppointment.save).toHaveBeenCalled();
+            expect(logger.info).toHaveBeenCalledWith(`Appointment ${mockAppointmentId} status changed to Completed`);
+        });
+    
+        it('should throw an error for an invalid status', async () => {
+            await expect(appointmentManager.setAppointmentStatus(mockAppointmentId, 'InvalidStatus'))
+                .rejects.toThrow("Invalid status: InvalidStatus. Must be one of: Pending, Confirmed, Completed, Cancelled");
+    
+            expect(Appointment.findById).not.toHaveBeenCalled();  // Should not call findById if the status is invalid
+        });
+    
+        it('should throw an error if the appointment is not found', async () => {
+            Appointment.findById = jest.fn().mockResolvedValue(null);
+    
+            await expect(appointmentManager.setAppointmentStatus(mockAppointmentId, 'Confirmed'))
+                .rejects.toThrow("Appointment not found");
+    
+            expect(Appointment.findById).toHaveBeenCalledWith(mockAppointmentId);
+            expect(logger.info).not.toHaveBeenCalled();
+        });
+    });
 });
