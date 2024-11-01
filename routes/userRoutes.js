@@ -81,6 +81,14 @@ router.post('/make-appointment', isAuthenticated, authorizeRole('student', 'tuto
       const studentId = req.session.userId;   // Get the logged-in student's ID from the session
       const userRole = req.session.userRole;  // Retrieve the user's role from the session
 
+      // Check if the selected date and time are in the future
+      const selectedDateTime = new Date(`${date}T${time}`);
+      const currentDateTime = new Date();
+
+      if (selectedDateTime <= currentDateTime) {
+        return res.status(400).send('Appointment data and time must be in the future.');
+      }
+
       // Find the tutor by ID to ensure they exist
       const tutor = await User.findById(tutorId);
       if (!tutor || !tutor.isTutor) {
