@@ -86,7 +86,7 @@ app.get('/about', (req, res) => {
 app.get('/search', async (req, res) => {
   try {
     const tutors = await User.find({ isTutor: true });
-    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', ' Friday', 'Saturday', 'Sunday'];
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     res.render('search', { tutors, days });
   }
   catch (error) {
