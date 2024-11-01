@@ -39,6 +39,10 @@ const seedUsers = async() => {
         const seedEmail = seedUsername + emailSuffix;
         const hashedPassword = await bcrypt.hash(defaultPassword, 10);
 
+        // Randomly set isTutor to true or false, then assign role based on isTutor value
+        const isTutor = Math.random() < 0.2; // 20% chance to be true
+        const role = isTutor ? 'tutor' : 'student';
+
         users.push(new User({
             username: seedUsername,
             email: seedEmail,
@@ -47,7 +51,8 @@ const seedUsers = async() => {
             rating:Math.floor(Math.random() * 6), // generates a rating between 0 and 5
             reviews: ['A review of the user', 'Another review2 of the user'],
             schoolYear: `${sample(schoolYear)}`,
-            isTutor: Math.floor(Math.random() * 2)
+            isTutor: isTutor,
+            role: role     // assigns role based on isTutor
         }));
     }
 

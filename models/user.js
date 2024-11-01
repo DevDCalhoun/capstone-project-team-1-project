@@ -17,6 +17,11 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    role: {
+        type: String,
+        enum: ['student', 'tutor', 'admin'],    // Defined roles
+        default: 'student'                      // Default role for all users
+    },
     major: {
         type: String,
         required: false, // Optional, set to true if mandatory
