@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const isAuthenticated = require('../middleware/auth');
+const authorizeRole = require('../middleware/authRole');
 const userController = require('../controllers/userController');
 const AvailabilityManager = require('../classes/availabilityManager');
 const AppointmentManager = require('../classes/appointmentManager');
@@ -21,7 +22,7 @@ router.post('/login', userController.postLogin);
 // Route for POST request for logout page
 router.post('/logout', userController.postLogout);
 
-router.get('/availability', (req, res) => {
+router.get('/availability', isAuthenticated, authorizeRole('tutor'), (req, res) => {
   if(!req.session.userId) {
     return res.redirect('/user/login');
   }
@@ -29,7 +30,7 @@ router.get('/availability', (req, res) => {
   res.render('availability', { userId: req.session.userId }); 
 })
 
-router.post('/availability', async (req, res) => {
+router.post('/availability', isAuthenticated, authorizeRole('tutor'), async (req, res) => {
   const userId = req.session.userId;
   const availability = req.body.availability;
 
@@ -74,10 +75,19 @@ router.get('/make-appointment', isAuthenticated, async (req, res) => {
 });
 
 // POST route to create an appointment (requires authentication)
-router.post('/make-appointment', isAuthenticated, async (req, res) => {
+router.post('/make-appointment', isAuthenticated, authorizeRole('student', 'tutor', 'admin'), async (req, res) => {
   try {
       const { tutorId, date, time, details } = req.body;
-      const studentId = req.session.userId; // Get the logged-in student's ID from the session
+      const studentId = req.session.userId;   // Get the logged-in student's ID from the session
+      const userRole = req.session.userRole;  // Retrieve the user's role from the session
+
+      // Check if the selected date and time are in the future
+      const selectedDateTime = new Date(`${date}T${time}`);
+      const currentDateTime = new Date();
+
+      if (selectedDateTime <= currentDateTime) {
+        return res.status(400).send('Appointment data and time must be in the future.');
+      }
 
       // Find the tutor by ID to ensure they exist
       const tutor = await User.findById(tutorId);
@@ -85,14 +95,19 @@ router.post('/make-appointment', isAuthenticated, async (req, res) => {
           return res.status(404).send('Tutor not found');
       }
 
+      // Prevent tutors from booking themselves
+      if (studentId === tutorId) {
+        return res.status(400).send('You cannot make an appointment with yourself');
+      }
+
       // Create a new appointment
-      const appointmentManager = new AppointmentManager(studentId);
+      const appointmentManager = new AppointmentManager(studentId, userRole);
       const newAppointment = await appointmentManager.createAppointment(
           studentId,
           tutorId,
           date,
           time,
-          details || 'General inquiry',
+          details || 'General Inquiry',   // If left blank
       );
 
       // Save the appointment to the database

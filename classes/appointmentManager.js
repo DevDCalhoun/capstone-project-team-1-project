@@ -5,12 +5,18 @@ const logger = require('../logging/logger');
 
 class AppointmentManager {
     // Constructor to initialize the appointment manager with userID(SessionID)
-    constructor(userId) {
+    constructor(userId, userRole) {
         this.userId = userId;
+        this.userRole = userRole;
     }
 
     // Method creates a new appointment
     async createAppointment(studentId, tutorId, day, time, details) {
+        // Role check
+        if (!['student', 'tutor', 'admin'].includes(this.userRole)) {
+            throw new Error("Permission denied: You do not have access to create appointments");
+        }
+
         try {
             const newAppointment = new Appointment({
                 studentId,
@@ -69,6 +75,10 @@ class AppointmentManager {
 
     // Update an appointment
     async updateAppointment(appointmentId, updateData) {
+        // Role check
+        if (!['student', 'tutor', 'admin'].includes(this.userRole)) {
+            throw new Error("Permission denied: You do not have access to update appointments");
+        }
         try {
             const appointment = await Appointment.findByIdAndUpdate(
                 appointmentId,
@@ -87,6 +97,10 @@ class AppointmentManager {
 
     // Delete an appointment by ID
     async deleteAppointment(appointmentId) {
+        // Role check
+        if (!['student', 'tutor', 'admin'].includes(this.userRole)) {
+            throw new Error("Permission denied: You do not have access to update appointments");
+        }
         try {
             const result = await Appointment.findByIdAndDelete(appointmentId);
             if (!result) {
@@ -101,6 +115,11 @@ class AppointmentManager {
 
      // New method to set appointment status
      async setAppointmentStatus(appointmentId, newStatus) {
+        // Role check
+        if (!['tutor', 'admin'].includes(this.userRole)) {
+            throw new Error("Permission denied: Only tutors and admins can change appointment status");
+        }
+        
         const validStatuses = ['Pending', 'Confirmed', 'Completed', 'Cancelled'];
 
         // Check if the provided status is valid
