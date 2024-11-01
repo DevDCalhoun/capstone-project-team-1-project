@@ -6,7 +6,7 @@ const availabilitySchema = new Schema({
   tutorId: {
     type: Schema.Types.ObjectId,
     ref: 'User',  // Reference to the tutor
-    required: true
+    required: false,
   },
   day: {
     type: String,

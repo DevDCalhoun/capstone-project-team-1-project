@@ -16,12 +16,15 @@ class SearchParameters {
 
     const query = {};
 
+    query.isTutor = true;
+
     if(username) {
-      const cleanUsername = this.checkText(cleanUsername);
-      query.username = { $regex: username, $options: 'i'};
+      const cleanUsername = this.checkText(username);
+      query.username = { $regex: cleanUsername, $options: 'i'};
     }
     if(major) {
-      query.major = { $regex: major, $options: 'i'};
+      const cleanMajor = this.checkText(major);
+      query.major = { $regex: cleanMajor, $options: 'i' };
     }
     if(rating) {
       query.rating = {$gte: rating };

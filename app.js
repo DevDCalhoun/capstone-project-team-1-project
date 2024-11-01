@@ -27,6 +27,7 @@ app.use((req, res, next) => {
 
 // Allows objects and arrays to be encoded into the URL-encoded format
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json()); 
 
 // The database URL for connection purposes
 const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/disruptutorDB';
