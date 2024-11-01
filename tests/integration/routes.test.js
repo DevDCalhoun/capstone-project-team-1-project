@@ -52,4 +52,3 @@ describe('App Routes', () => {
     expect(res.text).to.include('<title>404 Page</title>');
   });
 })
-
