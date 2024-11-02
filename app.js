@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 const app = express();
+const csurf = require('csurf');
 const mongoose = require('mongoose');
 const MongoStore = require("connect-mongo");
 const errorHandler = require('./middleware/errorHandler');
@@ -63,12 +64,29 @@ const sessionConfig = {
   cookie: {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+    sameSite: 'lax', // Or 'strict' for stricter security on GET posts
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7
   }
 }
 
 app.use(session(sessionConfig)) // Use session configuration information
+
+// Set up CSRF protection
+app.use(csurf());
+
+// Middleware to pass CSRF token to all views
+app.use((req, res, next) => {
+  res.locals.csrfToken = req.csrfToken(); // Make the CSRF token available to all views
+  next();
+});
+
+// Allows EJS templates to make use of session information
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isAuthenticated || false;
+  res.locals.user = req.session.user || null;
+  next();
+});
 
 // Allows EJS templates to make use of session information for conditional logic
 app.use((req, res, next) => {

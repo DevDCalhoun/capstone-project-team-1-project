@@ -14,6 +14,7 @@
   <h2 class="text-center mb-4">Update Your Availability</h2>
 
   <form action="/user/availability" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <table class="table table-bordered table-striped">
       <thead class="table-dark">
         <tr>
