@@ -10,6 +10,8 @@ const logger = require('../logging/logger');
 const Appointment = require('../models/appointment');
 const User = require('../models/user');
 const { addMinutes } = require('date-fns');
+const flash = require('connect-flash');
+const { param } = require('express-validator');
 
 // Route for profile page
 router.get('/profile', isAuthenticated, userController.getProfile);
@@ -23,7 +25,7 @@ router.post('/login', userController.postLogin);
 // Route for POST request for logout page
 router.post('/logout', userController.postLogout);
 
-router.get('/availability', isAuthenticated, authorizeRole('tutor'), (req, res) => {
+router.get('/availability', isAuthenticated, (req, res) => {
   if(!req.session.userId) {
     return res.redirect('/user/login');
   }
@@ -31,7 +33,7 @@ router.get('/availability', isAuthenticated, authorizeRole('tutor'), (req, res) 
   res.render('availability', { userId: req.session.userId }); 
 })
 
-router.post('/availability', isAuthenticated, authorizeRole('tutor'), async (req, res) => {
+router.post('/availability', isAuthenticated, async (req, res) => {
   const userId = req.session.userId;
   const availability = req.body.availability;
 
@@ -154,5 +156,21 @@ router.post('/make-appointment', isAuthenticated, authorizeRole('student', 'tuto
     res.status(500).send('Server error');
   }
 });
+
+router.post('/:id/accept', 
+  [
+    param('id').isMongoId().withMessage('Invalid appointment ID.')
+  ],
+  userController.acceptAppointment
+);
+
+router.post('/:id/reject', 
+  [
+    param('id').isMongoId().withMessage('Invalid appointment ID.')
+  ],
+  userController.rejectAppointment
+);
+
+
 
 module.exports = router;

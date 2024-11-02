@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 const register = require('./routes/register');
 const userRoutes = require('./routes/userRoutes');
 const SearchParameters = require('./classes/search');
+const flash = require('connect-flash');
 
 const User = require('./models/user');
 
@@ -73,6 +74,14 @@ app.use(session(sessionConfig)) // Use session configuration information
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isAuthenticated || false;
   res.locals.user = req.session.user || null;
+  next();
+});
+
+// Used for flashing error/success messages to users within any route
+app.use(flash());
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg'); // Array of success messages
+  res.locals.error_msg = req.flash('error_msg');     // Array of error messages
   next();
 });
 
