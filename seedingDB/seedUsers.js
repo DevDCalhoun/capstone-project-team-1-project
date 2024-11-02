@@ -29,7 +29,7 @@ const seedUsers = async() => {
     await User.deleteMany({}); // Waits to clear existing users
 
     const emailSuffix = '@fakeUWF.com';
-    const defaultPassword = '12345678';
+    const defaultPassword = 'Passw0rd!';
     const users = [];
 
     // Loops 100 times to put 100 random students and tutors into our database
