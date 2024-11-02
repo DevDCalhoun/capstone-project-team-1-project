@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const Appointment = require('../models/appointment.js');
 const { profileErrors, loginHandler } = require('../middleware/userErrorHandler.js');
+const { validationResult } = require('express-validator');
 
 exports.getProfile = async (req, res, next) => {
   try {
@@ -9,24 +10,26 @@ exports.getProfile = async (req, res, next) => {
     const user = await User.findById(req.session.userId).select('-password');
 
     if (!user) {
-      return res.status(404).send('User not found');
+      req.flash('error_msg', 'User not found.');
+      return res.redirect('/login'); // Redirect to login or appropriate page
     }
 
     // Fetch appointments where the user is the student
     const studentAppointments = await Appointment.find({ studentId: req.session.userId })
       .populate('tutorId', 'username email') // Populate tutor details
-      .sort({ day: -1, time: -1 }); // Sort by date and time descending
+      .sort({ day: -1 }); // Sort appointments by date in descending order
 
     // Fetch appointments where the user is the tutor
     const tutorAppointments = await Appointment.find({ tutorId: req.session.userId })
       .populate('studentId', 'username email') // Populate student details
-      .sort({ day: -1, time: -1 }); // Sort by date and time descending
+      .sort({ day: -1 }); // Sort appointments by date in descending order
 
     // Render the profile page with user info and both sets of appointments
     res.render('userProfile', { user, studentAppointments, tutorAppointments });
   } catch (error) {
     console.error("Profile error: ", error);
-    res.status(500).send('Internal server error');
+    req.flash('error_msg', 'Internal server error.');
+    res.status(500).redirect('/profile'); // Redirect back to profile or error page
   }
 };
 
@@ -60,4 +63,94 @@ exports.postLogout = (req, res) => {
   res.clearCookie('session');
 
   res.redirect('/user/login');
+};
+
+exports.acceptAppointment = async (req, res) => {
+  // Validate input
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    req.flash('error_msg', errors.array().map(err => err.msg).join(' '));
+    return res.redirect('/appointments/profile');
+  }
+
+  try {
+    const appointmentId = req.params.id;
+    const userId = req.session.userId;
+
+    // Find the appointment by ID
+    const appointment = await Appointment.findById(appointmentId);
+
+    if (!appointment) {
+      req.flash('error_msg', 'Appointment not found.');
+      return res.redirect('/appointments/profile');
+    }
+
+    // **Authorization Check:** Ensure the current user is the tutor
+    if (appointment.tutorId.toString() !== userId) {
+      req.flash('error_msg', 'Unauthorized action.');
+      return res.redirect('/appointments/profile');
+    }
+
+    // Check if the appointment is already confirmed or cancelled
+    if (appointment.status !== 'Pending') {
+      req.flash('error_msg', `Cannot accept an appointment that is already ${appointment.status}.`);
+      return res.redirect('/appointments/profile');
+    }
+
+    // Update the appointment status to 'Confirmed'
+    appointment.status = 'Confirmed';
+    await appointment.save();
+
+    req.flash('success_msg', 'Appointment accepted successfully.');
+    res.redirect('/appointments/profile');
+  } catch (error) {
+    console.error("Accept Appointment Error: ", error);
+    req.flash('error_msg', 'Internal server error.');
+    res.redirect('/appointments/profile');
+  }
+};
+
+exports.rejectAppointment = async (req, res) => {
+  // Validate input
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    req.flash('error_msg', errors.array().map(err => err.msg).join(' '));
+    return res.redirect('/appointments/profile');
+  }
+
+  try {
+    const appointmentId = req.params.id;
+    const userId = req.session.userId;
+
+    // Find the appointment by ID
+    const appointment = await Appointment.findById(appointmentId);
+
+    if (!appointment) {
+      req.flash('error_msg', 'Appointment not found.');
+      return res.redirect('/appointments/profile');
+    }
+
+    // **Authorization Check:** Ensure the current user is the tutor
+    if (appointment.tutorId.toString() !== userId) {
+      req.flash('error_msg', 'Unauthorized action.');
+      return res.redirect('/appointments/profile');
+    }
+
+    // Check if the appointment is already confirmed or cancelled
+    if (appointment.status !== 'Pending') {
+      req.flash('error_msg', `Cannot reject an appointment that is already ${appointment.status}.`);
+      return res.redirect('/appointments/profile');
+    }
+
+    // Update the appointment status to 'Cancelled'
+    appointment.status = 'Cancelled';
+    await appointment.save();
+
+    req.flash('success_msg', 'Appointment rejected successfully.');
+    res.redirect('/appointments/profile');
+  } catch (error) {
+    console.error("Reject Appointment Error: ", error);
+    req.flash('error_msg', 'Internal server error.');
+    res.redirect('/appointments/profile');
+  }
 };
