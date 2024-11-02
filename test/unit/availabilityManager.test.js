@@ -1,4 +1,3 @@
-// availabilityManager.test.js
 const AvailabilityManager = require('../../classes/availabilityManager');
 const User = require('../../models/user');
 
