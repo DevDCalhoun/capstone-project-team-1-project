@@ -102,10 +102,12 @@
                 <div class="mt-2">
                   <!-- Accept Button -->
                   <form action="/appointments/<%= appointment._id %>/accept" method="POST" style="display:inline;">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <button type="submit" class="btn btn-success btn-sm">Accept</button>
                   </form>
                   <!-- Reject Button -->
                   <form action="/appointments/<%= appointment._id %>/reject" method="POST" style="display:inline;">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <button type="submit" class="btn btn-danger btn-sm">Reject</button>
                   </form>
                 </div>
