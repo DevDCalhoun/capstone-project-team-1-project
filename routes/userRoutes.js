@@ -9,6 +9,7 @@ const AppointmentManager = require('../classes/appointmentManager');
 const logger = require('../logging/logger');
 const Appointment = require('../models/appointment');
 const User = require('../models/user');
+const { addMinutes } = require('date-fns');
 
 // Route for profile page
 router.get('/profile', isAuthenticated, userController.getProfile);
@@ -81,16 +82,18 @@ router.post('/make-appointment', isAuthenticated, authorizeRole('student', 'tuto
       const studentId = req.session.userId;   // Get the logged-in student's ID from the session
       const userRole = req.session.userRole;  // Retrieve the user's role from the session
 
-      // Check if the selected date and time are in the future
+      // Covert times to Data object
       const selectedDateTime = new Date(`${date}T${time}`);
-      const currentDateTime = new Date();
+      const endTime = addMinutes(selectedDateTime, 30);   // Appointment end time (30 min time slots)
 
+      // Check if time is valid and for future
+      const currentDateTime = new Date();
       if (selectedDateTime <= currentDateTime) {
         return res.status(400).send('Appointment data and time must be in the future.');
       }
 
-      // Find the tutor by ID to ensure they exist
-      const tutor = await User.findById(tutorId);
+      // Find the tutor by ID and their availiability
+      const tutor = await User.findById(tutorId).populate('availability');
       if (!tutor || !tutor.isTutor) {
           return res.status(404).send('Tutor not found');
       }
@@ -100,7 +103,45 @@ router.post('/make-appointment', isAuthenticated, authorizeRole('student', 'tuto
         return res.status(400).send('You cannot make an appointment with yourself');
       }
 
-      // Create a new appointment
+      // Get the day of the week for the selected date (e.g., "Monday")
+      const appointmentDay = selectedDateTime.toLocaleString('en-US', { weekday: 'long' });
+
+      // Find the tutor's availability for that day
+      const availabilityForDay = tutor.availability.find(avail => avail.day === appointmentDay);
+      if (!availabilityForDay) {
+          return res.status(400).send(`The tutor is not available on ${appointmentDay}`);
+      }
+
+      // Convert the availability times to Date objects for comparison
+      const [startHour, startMinute] = availabilityForDay.startTime.split(':');
+      const [endHour, endMinute] = availabilityForDay.endTime.split(':');
+
+      const availabilityStartTime = new Date(date);
+      availabilityStartTime.setHours(parseInt(startHour, 10), parseInt(startMinute, 10));
+
+      const availabilityEndTime = new Date(date);
+      availabilityEndTime.setHours(parseInt(endHour, 10), parseInt(endMinute, 10));
+
+      // Ensure the selected time is within the tutor's available hours
+      if (selectedDateTime < availabilityStartTime || endTime > availabilityEndTime) {
+          return res.status(400).send('Selected time is outside the tutor’s available hours');
+      }
+
+      // Check for overlapping appointments
+      const overlappingAppointments = await Appointment.find({
+        tutorId,
+        day: date,
+        $or: [
+            { time: { $lt: endTime.toISOString(), $gte: selectedDateTime.toISOString() } },  // Overlap within the slot
+            { endTime: { $gt: selectedDateTime.toISOString(), $lte: endTime.toISOString() } } // Overlap within the slot
+        ]
+    });
+
+    if (overlappingAppointments.length > 0) {
+        return res.status(400).send('The tutor is already booked for this time slot');
+    }
+
+      // Create a new appointment if no overlap
       const appointmentManager = new AppointmentManager(studentId, userRole);
       const newAppointment = await appointmentManager.createAppointment(
           studentId,
