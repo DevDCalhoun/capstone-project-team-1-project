@@ -9,6 +9,7 @@ const AppointmentManager = require('../classes/appointmentManager');
 const logger = require('../logging/logger');
 const Appointment = require('../models/appointment');
 const User = require('../models/user');
+const { addMinutes } = require('date-fns');
 
 // Route for profile page
 router.get('/profile', isAuthenticated, userController.getProfile);
@@ -77,53 +78,80 @@ router.get('/make-appointment', isAuthenticated, async (req, res) => {
 // POST route to create an appointment (requires authentication)
 router.post('/make-appointment', isAuthenticated, authorizeRole('student', 'tutor', 'admin'), async (req, res) => {
   try {
-      const { tutorId, date, time, details } = req.body;
-      const studentId = req.session.userId;   // Get the logged-in student's ID from the session
-      const userRole = req.session.userRole;  // Retrieve the user's role from the session
+    const { tutorId, date, time, details } = req.body;
+    const studentId = req.session.userId;
+    const userRole = req.session.userRole;
 
-      // Check if the selected date and time are in the future
-      const selectedDateTime = new Date(`${date}T${time}`);
-      const currentDateTime = new Date();
+    const selectedDateTime = new Date(`${date}T${time}`);
 
-      if (selectedDateTime <= currentDateTime) {
-        return res.status(400).send('Appointment data and time must be in the future.');
-      }
+    // Check if selected date and time is in the future
+    const currentDateTime = new Date();
+    if (selectedDateTime <= currentDateTime) {
+      return res.status(400).send('Appointment date and time must be in the future.');
+    }
 
-      // Find the tutor by ID to ensure they exist
-      const tutor = await User.findById(tutorId);
-      if (!tutor || !tutor.isTutor) {
-          return res.status(404).send('Tutor not found');
-      }
+    // Find the tutor and check availability
+    const tutor = await User.findById(tutorId).populate('availability');
+    if (!tutor || !tutor.isTutor) {
+      return res.status(404).send('Tutor not found');
+    }
 
-      // Prevent tutors from booking themselves
-      if (studentId === tutorId) {
-        return res.status(400).send('You cannot make an appointment with yourself');
-      }
+    // Prevent tutors from booking themselves
+    if (studentId === tutorId) {
+      return res.status(400).send('You cannot make an appointment with yourself.');
+    }
 
-      // Create a new appointment
-      const appointmentManager = new AppointmentManager(studentId, userRole);
-      const newAppointment = await appointmentManager.createAppointment(
-          studentId,
-          tutorId,
-          date,
-          time,
-          details || 'General Inquiry',   // If left blank
-      );
+    // Validate the selected time falls within the tutor's available hours for that day
+    const appointmentDay = selectedDateTime.toLocaleDateString('en-US', { weekday: 'long' });
+    const availabilityForDay = tutor.availability.find(avail => avail.day === appointmentDay);
+    if (!availabilityForDay) {
+      return res.status(400).send(`The tutor is not available on ${appointmentDay}.`);
+    }
 
-      // Save the appointment to the database
-      await newAppointment.save();
+    const [startHour, startMinute] = availabilityForDay.startTime.split(':');
+    const [endHour, endMinute] = availabilityForDay.endTime.split(':');
 
-      // Log new appointment
-      if (newAppointment) {
-          logger.notice('New tutoring appointment created.');
-      }
+    const availabilityStartTime = new Date(selectedDateTime);
+    availabilityStartTime.setHours(parseInt(startHour, 10), parseInt(startMinute, 10), 0, 0);
 
-      //res.send('Appointment waiting confirmation from tutor.');
-      // Redirect to a confirmation page or appointments list
-      res.redirect('/user/profile'); // Redirect to profile page showing confirmed appointments
+    const availabilityEndTime = new Date(selectedDateTime);
+    availabilityEndTime.setHours(parseInt(endHour, 10), parseInt(endMinute, 10), 0, 0);
+
+    if (selectedDateTime < availabilityStartTime || selectedDateTime >= availabilityEndTime) {
+      return res.status(400).send('Selected time is outside the available hours.');
+    }
+
+    // Check for overlapping appointments by the same start time
+    const overlappingAppointments = await Appointment.findOne({
+      tutorId,
+      day: date,
+      time
+    });
+
+    if (overlappingAppointments) {
+      return res.status(400).send('The tutor is already booked for this time slot.');
+    }
+
+    // Create the appointment
+    const appointmentManager = new AppointmentManager(studentId, userRole);
+    const newAppointment = await appointmentManager.createAppointment(
+      studentId,
+      tutorId,
+      date,
+      time,
+      details || 'General Inquiry'
+    );
+
+    await newAppointment.save();
+
+    if (newAppointment) {
+      logger.notice('New tutoring appointment created.');
+    }
+
+    res.redirect('/user/profile');
   } catch (error) {
-      console.error('Error creating appointment:', error);
-      res.status(500).send('Server error');
+    console.error('Error creating appointment:', error);
+    res.status(500).send('Server error');
   }
 });
 
