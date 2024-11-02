@@ -16,9 +16,15 @@ const appointmentSchema = new Schema({
     type: Date,
     required: true,
   },
+  // Start time
   time: {
     type: String,
     required: false,
+  },
+  // End time
+  endTime: {
+    type: String,
+    required: true,
   },
   details: {
     type: String,

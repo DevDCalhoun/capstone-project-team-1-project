@@ -106,6 +106,12 @@ router.post('/make-appointment', isAuthenticated, authorizeRole('student', 'tuto
       // Get the day of the week for the selected date (e.g., "Monday")
       const appointmentDay = selectedDateTime.toLocaleString('en-US', { weekday: 'long' });
 
+      // Enforce start time only at the beginning of the hour or half-hour
+      const minutes = selectedDateTime.getMinutes();
+      if (minutes !== 0 && minutes !== 30) {
+          return res.status(400).send('Appointments can only be made on the hour or half-hour (e.g., 10:00 or 10:30)');
+      }
+
       // Find the tutor's availability for that day
       const availabilityForDay = tutor.availability.find(avail => avail.day === appointmentDay);
       if (!availabilityForDay) {
@@ -124,7 +130,7 @@ router.post('/make-appointment', isAuthenticated, authorizeRole('student', 'tuto
 
       // Ensure the selected time is within the tutor's available hours
       if (selectedDateTime < availabilityStartTime || endTime > availabilityEndTime) {
-          return res.status(400).send('Selected time is outside the tutor’s available hours');
+          return res.status(400).send('Selected time is outside the available hours');
       }
 
       // Check for overlapping appointments
@@ -149,6 +155,7 @@ router.post('/make-appointment', isAuthenticated, authorizeRole('student', 'tuto
           date,
           time,
           details || 'General Inquiry',   // If left blank
+          endTime.toISOString()
       );
 
       // Save the appointment to the database
