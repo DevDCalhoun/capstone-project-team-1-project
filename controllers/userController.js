@@ -3,24 +3,32 @@ const User = require('../models/user');
 const Appointment = require('../models/appointment.js');
 const { profileErrors, loginHandler } = require('../middleware/userErrorHandler.js');
 
-// Error handling and route logic for the user profile route
 exports.getProfile = async (req, res, next) => {
   try {
-    // Finds user in database but does not look at the password field
+    // Fetch the user from the database, excluding the password
     const user = await User.findById(req.session.userId).select('-password');
 
-    // Find all appointments where the user is the student
-    const appointments = await Appointment.find({ studentId: req.session.userId })
-      .populate('tutorId') // Populate the tutor details
-      .sort({ date: -1 }); // Sort appointments by date in descending order
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
 
-    // Render user profile with 'user' and 'appointments' entries from database
-    res.render('userProfile', { user, appointments });
+    // Fetch appointments where the user is the student
+    const studentAppointments = await Appointment.find({ studentId: req.session.userId })
+      .populate('tutorId', 'username email') // Populate tutor details
+      .sort({ day: -1, time: -1 }); // Sort by date and time descending
+
+    // Fetch appointments where the user is the tutor
+    const tutorAppointments = await Appointment.find({ tutorId: req.session.userId })
+      .populate('studentId', 'username email') // Populate student details
+      .sort({ day: -1, time: -1 }); // Sort by date and time descending
+
+    // Render the profile page with user info and both sets of appointments
+    res.render('userProfile', { user, studentAppointments, tutorAppointments });
   } catch (error) {
     console.error("Profile error: ", error);
     res.status(500).send('Internal server error');
   }
-}
+};
 
 // Route logic for user login page
 exports.getLogin = (req, res) => {

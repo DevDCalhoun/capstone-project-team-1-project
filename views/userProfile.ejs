@@ -11,29 +11,61 @@
 </head>
 <body>
   <%- include('partials/navbar'); %>
-  <div class="text-center card border">
-    <h1>Welcome to your profile <b><%= user.username %></b>!</h1>
+  
+  <div class="text-center card border my-4">
+    <h1>Welcome to your profile, <b><%= user.username %></b>!</h1>
   </div>
+  
   <div class="container mt-5">
-    <h2 class="text-center mb-4">Your Profile</h2>
+    <h2 class="text-center mb-4">Your Appointments</h2>
 
-    <h3>Your Appointments</h3>
-    <ul class="list-group">
-        <% if (appointments.length > 0) { %>
-            <% appointments.forEach(appointment => { %>
-                <li class="list-group-item">
-                    <strong>Tutor:</strong> <%= appointment.tutorId.username %> <br>
-                    <strong>Date:</strong> <%= appointment.day.toLocaleDateString() %> <br>
-                    <strong>Time:</strong> <%= appointment.time %> <br>
-                    <strong>Status:</strong> <%= appointment.status %> <br>
-                    <strong>Details:</strong> <%= appointment.details %>
-                </li>
-            <% }) %>
+    <!-- Appointments as Student -->
+    <div class="mb-5">
+      <h3>Your Appointments as Student</h3>
+      <ul class="list-group">
+        <% if (studentAppointments.length > 0) { %>
+          <% studentAppointments.forEach(appointment => { %>
+            <li class="list-group-item">
+              <strong>Tutor:</strong> <%= appointment.tutorId.username %> (<%= appointment.tutorId.email %>) <br>
+              <strong>Date:</strong> <%= new Date(appointment.day).toLocaleDateString() %> <br>
+              <strong>Time:</strong> <%= appointment.time %> <br>
+              <strong>Status:</strong> <%= appointment.status %> <br>
+              <strong>Details:</strong> <%= appointment.details %>
+              <!-- Optional: Add actions for students, like canceling appointments -->
+            </li>
+          <% }) %>
         <% } else { %>
-            <li class="list-group-item">You have no appointments</li>
+          <li class="list-group-item">You have no appointments as a student.</li>
         <% } %>
-    </ul>
-</div>
+      </ul>
+    </div>
+
+    <!-- Appointments as Tutor -->
+    <div class="mb-5">
+      <h3>Your Appointments as Tutor</h3>
+      <ul class="list-group">
+        <% if (tutorAppointments.length > 0) { %>
+          <% tutorAppointments.forEach(appointment => { %>
+            <li class="list-group-item">
+              <strong>Student:</strong> <%= appointment.studentId.username %> (<%= appointment.studentId.email %>) <br>
+              <strong>Date:</strong> <%= new Date(appointment.day).toLocaleDateString() %> <br>
+              <strong>Time:</strong> <%= appointment.time %> <br>
+              <strong>Status:</strong> <%= appointment.status %> <br>
+              <strong>Details:</strong> <%= appointment.details %> <br>
+
+              <% if (appointment.status === 'Pending') { %>
+                <form action="/appointments/<%= appointment._id %>/accept" method="POST" class="mt-2">
+                  <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                </form>
+              <% } %>
+            </li>
+          <% }) %>
+        <% } else { %>
+          <li class="list-group-item">You have no appointments as a tutor.</li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>

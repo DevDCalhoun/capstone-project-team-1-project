@@ -29,7 +29,22 @@ describe('Tests for tutor search functionality', () => {
       hasReviews: 'on',
       schoolYear: 'Junior',
       availability: ['Monday', 'Wednesday', 'Friday'],
-    }
+    };
+
+    const searchParams = new SearchParameters(params);
+    const query = searchParams.createQuery();
+
+    const expectedQuery = {
+      isTutor: true,
+      username: { $regex: 'Brody', $options: 'i' },
+      major: { $regex: 'Cybersecurity', $options: 'i' },
+      rating: { $gte: '4' }, // Changed to string
+      reviews: { $exists: true, $not: { $size: 0 } },
+      schoolYear: 'Junior',
+      'availability.day': { $in: ['Monday', 'Wednesday', 'Friday'] },
+    };
+
+    expect(query).toEqual(expectedQuery);
   });
 
   it('should create a query with only one availability value', () => {
