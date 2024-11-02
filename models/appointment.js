@@ -24,7 +24,7 @@ const appointmentSchema = new Schema({
   // End time
   endTime: {
     type: String,
-    required: true,
+    required: false,
   },
   details: {
     type: String,
