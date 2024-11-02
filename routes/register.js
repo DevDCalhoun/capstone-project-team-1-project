@@ -7,15 +7,20 @@ const router = express.Router();
 
 // Renders registration page and displays user form
 router.get('/register', (req, res) => {
-    res.render('register');
+    res.render('register', { errors: [] });
 });
 
 // Handles user input and registration form submission
 router.post('/register', [
     // Validation Checks
-    body('username').notEmpty().withMessage('username is required'),
+    body('username').notEmpty().withMessage('Username is required'),
     body('email').isEmail().withMessage('Enter a valid email'),
-    body('password').isLength({ min: 8 }).withMessage('Password must be min. 8 chars'),
+    body('password')
+        .isLength({ min: 8, max: 12 }).withMessage('Password must be 8-12 characters')
+        .matches(/[a-z]/).withMessage('Password must contain at least one lowercase letter')
+        .matches(/[A-Z]/).withMessage('Password must contain at least one uppercase letter')
+        .matches(/\d/).withMessage('Password must contain at least one number')
+        .matches(/[!@#$%^&*(),.?":{}|<>]/).withMessage('Password must contain at least one special character'),
     body('major').optional().isString().withMessage('Major should be a valid string'),
     body('schoolYear').optional().isIn(['Freshman', 'Sophomore', 'Junior', 'Senior']).withMessage('Select a valid school year'),
     body('isTutor').optional().isBoolean().withMessage('Invalid tutor selection'),
@@ -28,7 +33,7 @@ router.post('/register', [
         if (!errors.isEmpty()) {
             // Log detailed validation errors
             logger.error('Validation errors: ', { errors: errors.array() });
-            return res.status(400).render('register', { errors: errors.array() });
+            return res.status(400).render('register', { errors: errors.array(), data: req.body });
         }
 
         // Check if user already exists
