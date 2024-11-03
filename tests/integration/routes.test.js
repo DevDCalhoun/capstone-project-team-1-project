@@ -46,9 +46,9 @@ describe('App Routes', () => {
 // Integration test for profile page and 404 page
 // profile should fail if there is no session present, as this assumes
 describe('App Routes', () => {
-  it('should render the profile page', async () => {
-    const res = await request(app).get('/users/profile');
-    expect(res.statusCode).to.equal(404);
-    expect(res.text).to.include('<title>404 Page</title>');
+  it('should reroute to login page from the profile page with authentication', async () => {
+    const res = await request(app).get('/user/profile');
+    expect(res.statusCode).to.equal(302);
+    expect(res.headers.location).to.equal('/user/login');
   });
 })
