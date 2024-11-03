@@ -4,7 +4,7 @@
 
 #### DisrupTutor is a web application that allows students to find and schedule tutors from the Multipurpose Lab (MPL) at the University of West Florida (UWF). For more information about the lab, visit the [MPL](https://uwf.edu/hmcse/departments/computer-science/about-us/facilities/multiplatform-lab/) website.
 
-![Version](https://img.shields.io/badge/version-0.3-blue)
+![Version](https://img.shields.io/badge/version-0.5-blue)
 ![Nodejs](https://img.shields.io/badge/node.js-v20.11.0-blue)
 ![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen)
 ![Build](https://img.shields.io/badge/build-passing-brightgreen)
@@ -98,6 +98,8 @@ These packages will be automatically installed with [npm](https://docs.npmjs.com
 * mongoose: An ODM for MongoDB, used for managing schema-based data models.
 * pino: A fast logging library for logging in JSON format, ensuring efficiency and performance.
 * sinon: A testing library for Node.js applications
+* jest: A testing framework for unit and integration tests
+* supertest: A testing library for Node.js applications
 
 ### Node.js Dev Dependencies
 
@@ -146,13 +148,24 @@ GitHub repository created by:
 
 In the project's next iteration of development, newer versions add the following functionality:
 
-* 0.4 - 0.6
+* 0.6 - 0.7
     * User features for profile pages
-    * Role-based users
-    * Tutor scheduling
+        * Tutor ratings
+        * Tutor reviews
 
 ## Version History
 
+*  0.5
+    * CSRF tokens in web form POST requests
+    * Authorization routing
+    * Role-base users for 'student', 'tutor', 'admin'
+    * Search criteria for tutor selection complete
+*  0.4
+    * Authentication routing 
+    * UI/UX for search, availability, and appointment web pages
+    * Appointment scheduling capabilities
+    * Search available tutors 
+    * Functionality for tutor availability
 * 0.3
     * Refactor for CRUD
     * Optimize login,register,logout routes
