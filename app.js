@@ -76,14 +76,23 @@ const sessionConfig = {
 
 app.use(session(sessionConfig)) // Use session configuration information
 
-// Set up CSRF protection
-app.use(csurf());
+// Apply CSRF protection in production. Excluded for jest testing
+if (process.env.NODE_ENV !== 'test') {
+  app.use(csurf());
 
-// Middleware to pass CSRF token to all views
-app.use((req, res, next) => {
-  res.locals.csrfToken = req.csrfToken(); // Make the CSRF token available to all views
-  next();
-});
+  // Middleware to pass CSRF token to all views
+  app.use((req, res, next) => {
+    res.locals.csrfToken = req.csrfToken(); // Make the CSRF token available to all views
+    next();
+  });
+}
+// Mock CSRF token for testing
+if (process.env.NODE_ENV === 'test') {
+  app.use((req, res, next) => {
+    res.locals.csrfToken = 'test-csrf-token'; 
+    next();
+  });
+}
 
 // Allows EJS templates to make use of session information
 app.use((req, res, next) => {
