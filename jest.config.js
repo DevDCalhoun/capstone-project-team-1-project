@@ -1,3 +1,6 @@
 module.exports = {
-    testMatch: ["<rootDir>/test/**/*.test.js"],  
-  };
+  preset: '@shelf/jest-mongodb',    // Enables MongoDB in-memory testing
+  testEnvironment: 'node',
+  testMatch: ["<rootDir>/test/**/*.test.js"],  
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"], // Ensures custom setup after environment setup
+};

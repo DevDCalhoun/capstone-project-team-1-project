@@ -5,6 +5,7 @@ const app = express();
 const csurf = require('csurf');
 const mongoose = require('mongoose');
 const MongoStore = require("connect-mongo");
+const MemoryStore = require('memorystore')(session); // In-memory session store for testing
 const errorHandler = require('./middleware/errorHandler');
 const logger = require('./logging/logger'); 
 const bodyParser = require('body-parser');
@@ -31,11 +32,11 @@ app.use((req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json()); 
 
-// The database URL for connection purposes
-const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/disruptutorDB';
+// The database URL for connection and jest testing purposes
+const dbUrl = process.env.DB_URL || (process.env.NODE_ENV === 'test' ? global.__MONGO_URI__ || 'mongodb://localhost:27017/testDB' : 'mongodb://localhost:27017/disruptutorDB');
 
 // Connects to and opens the database
-mongoose.connect(dbUrl);
+mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
@@ -44,11 +45,14 @@ db.once("open", () => {
 
 // MongoStore is used to maintain user sessions across server restarts
 const secret = process.env.SECRET || 'non-production-secret'; //secret key to be used for session management
-const store = MongoStore.create({
-  mongoUrl: dbUrl,
-  secret,
-  touchAfter: 24 * 60 * 60, // Time period in seconds
-});
+// Conditionally use MongoStore or MemoryStore for sessions
+const store = process.env.NODE_ENV === 'test'
+  ? new MemoryStore({ checkPeriod: 86400000 }) // 24 hours for cleanup in memory
+  : MongoStore.create({
+      mongoUrl: dbUrl,
+      secret,
+      touchAfter: 24 * 60 * 60,
+    });
 
 store.on("error", function(e) {
   console.log("Session store error");
@@ -65,8 +69,8 @@ const sessionConfig = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
     sameSite: 'lax', // Or 'strict' for stricter security on GET posts
-    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-    maxAge: 1000 * 60 * 60 * 24 * 7
+    expires: Date.now() + 1000 * 60 * 15, // Set to 15 minutes from now
+    maxAge: 1000 * 60 * 15 // 15 minutes in milliseconds
   }
 }
 
