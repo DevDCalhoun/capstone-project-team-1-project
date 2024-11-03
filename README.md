@@ -148,10 +148,9 @@ GitHub repository created by:
 
 In the project's next iteration of development, newer versions add the following functionality:
 
-* 0.6 - 0.7
-    * User features for profile pages
-        * Tutor ratings
-        * Tutor reviews
+* 0.6 - 0.7: User features for profile pages
+    * Tutor ratings
+    * Tutor reviews
 
 ## Version History
 
