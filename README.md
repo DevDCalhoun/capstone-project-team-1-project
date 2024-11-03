@@ -40,6 +40,7 @@ With the current conditions on campus at the University of West Florida, student
 The video demo is walkthrough of the web application in its current status.  Setup and installation to run the application are provided [below](#getting-started).
 
 * [Stage 1 Demo](https://youtu.be/-i7RM1oir0A)
+* [Stage 2 Demo](https://youtu.be/-i7RM1oir0A)
 
 
 ## Getting Started
@@ -149,7 +150,9 @@ GitHub repository created by:
 
 In the project's next iteration of development, newer versions add the following functionality:
 
-* 0.6 - 0.7: User features for profile pages
+* 0.7 - 1.0:
+    * Configuration & deployment
+* 0.6: User features for profile pages
     * Tutor ratings
     * Tutor reviews
 
