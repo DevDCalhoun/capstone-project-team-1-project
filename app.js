@@ -88,13 +88,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Allows EJS templates to make use of session information for conditional logic
-app.use((req, res, next) => {
-  res.locals.isAuthenticated = req.session.isAuthenticated || false;
-  res.locals.user = req.session.user || null;
-  next();
-});
-
 // Used for flashing error/success messages to users within any route
 app.use(flash());
 app.use((req, res, next) => {
