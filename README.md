@@ -40,7 +40,7 @@ With the current conditions on campus at the University of West Florida, student
 The video demo is walkthrough of the web application in its current status.  Setup and installation to run the application are provided [below](#getting-started).
 
 * [Stage 1 Demo](https://youtu.be/-i7RM1oir0A)
-* [Stage 2 Demo](https://youtu.be/-i7RM1oir0A)
+* [Stage 2 Demo](https://youtu.be/xvIwwKJa_Y4)
 
 
 ## Getting Started
