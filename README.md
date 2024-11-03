@@ -144,7 +144,7 @@ nodemon --help
 GitHub repository created by:
 - Instructor: [E.L. Fridge](efridge@uwf.edu)
 
-## Version 0.4 and higher
+## Version 0.6 and higher
 
 In the project's next iteration of development, newer versions add the following functionality:
 
