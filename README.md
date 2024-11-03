@@ -131,7 +131,7 @@ Results are displayed to the terminal as pass/fail.
 
 ### Test Coverage and Security Controls
 The development of this web appication is using the [OWASP Web Security Testing Guide](https://github.com/OWASP/wstg). For
-test cases and security testing, see our documentation. 
+test cases and security testing, see our [documentation](documentation/capstone-team1-security-controls-and-testing-stage2.docx.pdf). 
 
 ## Help
 
