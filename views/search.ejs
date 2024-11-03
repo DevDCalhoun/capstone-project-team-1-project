@@ -27,6 +27,7 @@
       <form action="/search" method="POST">
         <!-- Form row -->
         <div class="row">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <!-- Username -->
            <div class="col-md-4 mb-3">
             <label for="username" class="form-label">Username</label>
