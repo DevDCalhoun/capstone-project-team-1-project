@@ -100,6 +100,7 @@ These packages will be automatically installed with [npm](https://docs.npmjs.com
 * sinon: A testing library for Node.js applications
 * jest: A testing framework for unit and integration tests
 * supertest: A testing library for Node.js applications
+* csurf: Provides Cross-Site Request Forgery (CSRF) protection for Express.js web applications
 
 ### Node.js Dev Dependencies
 
