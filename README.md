@@ -129,6 +129,10 @@ npm test
 ```
 Results are displayed to the terminal as pass/fail.
 
+### Test Coverage and Security Controls
+The development of this web appication is using the [OWASP Web Security Testing Guide](https://github.com/OWASP/wstg). For
+test cases and security testing, see our documentation. 
+
 ## Help
 
 The following node commands for helper info may aid in resolving setup issues:
