@@ -12,6 +12,8 @@ const User = require('../models/user');
 const { addMinutes } = require('date-fns');
 const flash = require('connect-flash');
 const { param } = require('express-validator');
+const profileController = require('../controllers/profileController');
+
 
 // Route for profile page
 router.get('/profile', isAuthenticated, userController.getProfile);
@@ -170,6 +172,8 @@ router.post('/:id/reject',
   ],
   userController.rejectAppointment
 );
+
+router.get('/:id', profileController.getProfile);
 
 
 

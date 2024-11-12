@@ -97,7 +97,9 @@
             <div class="col-md-4 mb-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title"><%= tutor.username %></h5>
+                        <h5 class="card-title">
+                          <a href="/user/<%= tutor._id %>" class="text-primary"><%= tutor.username %></a>
+                        </h5>
                         <p class="card-text"><strong>Major:</strong> <%= tutor.major || "Not specified" %></p>
                         <p class="card-text"><strong>Rating:</strong> <%= tutor.rating %> / 5</p>
                         <p class="card-text"><strong>Year:</strong> <%= tutor.schoolYear || "Not specified" %></p>

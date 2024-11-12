@@ -1,0 +1,21 @@
+const User = require('../models/user');
+
+exports.getProfile = async (req, res, next) => {
+  try {
+    // Retrieve user ID from the URL parameters
+    const userId = req.params.id;
+
+    // Find the user by their ID
+    const user = await User.findById(userId).populate('appointmentsAsStudent').populate('appointmentAsTutor');
+
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    // Render the profile page with the user's data
+    res.render('publicProfile', { user });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+}
