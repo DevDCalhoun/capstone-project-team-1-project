@@ -49,7 +49,13 @@ const seedUsers = async() => {
             password: hashedPassword,
             major: `${sample(major)}`,
             rating:Math.floor(Math.random() * 6), // generates a rating between 0 and 5
-            reviews: ['A review of the user', 'Another review2 of the user'],
+            reviews: ['A review of the user', 'Another review2 of the user'].map(review => ({
+                tutorId: null,
+                content: review, // Convert each string review to an object with a `content` field
+                reviewerName: "Anonymous", // Set a default reviewer name if unknown
+                reviewerID: null, // Set as null
+                rating: 0
+            })),
             schoolYear: `${sample(schoolYear)}`,
             isTutor: isTutor,
             role: role     // assigns role based on isTutor

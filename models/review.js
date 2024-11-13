@@ -5,7 +5,7 @@ const reviewSchema = new Schema({
     tutorId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
+        required: false,  // FALSE for SEEDING
     },
     content: {
         type: String, 
@@ -16,7 +16,13 @@ const reviewSchema = new Schema({
     reviewerID: {
         type: mongoose.Schema.Types.ObjectId, // References the student's ID
         ref: 'User', 
-        required: true // Ensures each review has an associated student ID
+        required: false // Ensures each review has an associated student ID FALSE for SEEDING
+    },
+    rating: {
+        type: Number,
+        required: false,
+        min: 0,
+        max: 5
     }
 });
 
