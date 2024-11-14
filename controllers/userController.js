@@ -3,6 +3,8 @@ const User = require('../models/user');
 const Appointment = require('../models/appointment.js');
 const { profileErrors, loginHandler } = require('../middleware/userErrorHandler.js');
 const { validationResult } = require('express-validator');
+const AppointmentManager = require('../classes/appointmentManager');
+
 
 exports.getProfile = async (req, res, next) => {
   try {
@@ -152,5 +154,24 @@ exports.rejectAppointment = async (req, res) => {
     console.error("Reject Appointment Error: ", error);
     req.flash('error_msg', 'Internal server error.');
     res.redirect('/appointments/profile');
+  }
+};
+
+exports.completeAppointment = async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const userRole = req.session.userRole; // Assuming userRole is stored in session
+
+    // Instantiate AppointmentManager with userId and userRole
+    const appointmentManager = new AppointmentManager(userId, userRole);
+
+    const appointmentId = req.params.id;
+    await appointmentManager.completeAppointment(appointmentId);
+
+    req.flash('success_msg', 'Appointment marked as completed');
+    res.redirect('/user/profile');
+  } catch (error) {
+    req.flash('error_msg', error.message);
+    res.redirect('/user/profile');
   }
 };

@@ -175,6 +175,6 @@ router.post('/:id/reject',
 
 router.get('/:id', profileController.getProfile);
 
-
+router.post('/:id/complete', userController.completeAppointment);
 
 module.exports = router;

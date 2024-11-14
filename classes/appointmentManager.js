@@ -145,6 +145,21 @@ class AppointmentManager {
             throw error;
         }
     }
+
+    async completeAppointment(appointmentId) {
+        try {
+            const appointment = await Appointment.findById(appointmentId);
+            if (!appointment || appointment.status !== 'Confirmed') {
+                throw new Error('Only confirmed appointments can be completed');
+            }
+    
+            appointment.status = 'Completed';
+            await appointment.save();
+            return appointment;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = AppointmentManager;

@@ -112,6 +112,12 @@
                   </form>
                 </div>
               <% } %>
+              <% if (appointment.status === 'Confirmed') { %>
+                <form action="/appointments/<%= appointment._id %>/complete" method="POST" style="display:inline;">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <button type="submit" class="btn btn-primary btn-sm">Complete</button>
+                </form>
+              <% } %>
             </li>
           <% }) %>
         <% } else { %>
