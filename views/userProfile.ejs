@@ -62,8 +62,16 @@
               ">
                 <%= appointment.status %>
               </span> <br>
-              <strong>Details:</strong> <%= appointment.details %>
-              <!-- Optional: Add actions for students, like canceling appointments -->
+              <strong>Details:</strong> <%= appointment.details %> <br>
+    
+              <!-- Add "Write a Review" button if status is Completed -->
+              <% if (appointment.status === 'Completed') { %>
+                <div class="mt-2">
+                  <a href="/appointments/<%= appointment._id %>/review" class="btn btn-outline-primary btn-sm">
+                    Write a Review
+                  </a>
+                </div>
+              <% } %>
             </li>
           <% }) %>
         <% } else { %>

@@ -175,3 +175,53 @@ exports.completeAppointment = async (req, res) => {
     res.redirect('/user/profile');
   }
 };
+
+exports.getReviewPage = async (req, res) => {
+  try {
+    const appointmentId = req.params.id;
+    const appointment = await Appointment.findById(appointmentId).populate('tutorId', 'username');
+
+    if (!appointment || appointment.status !== 'Completed') {
+      req.flash('error_msg', 'You can only review completed appointments.');
+      res.redirect('/user/profile');
+    }
+
+    res.render('review', { appointmentId, tutorName: appointment.tutorId.username, csrfToken: req.csrfToken() });
+  } catch (error) {
+    console.error("Error displaying review page:", error);
+    req.flash('error_msg', 'Internal server error.');
+    res.redirect('/user/profile');
+  }
+};
+
+exports.submitReview = async (req, res) => {
+  try {
+    const { rating, content } = req.body;
+    const appointmentId = req.params.id;
+    const studentId = req.session.userId;
+
+    const appointment = await Appointment.findById(appointmentId).populate('tutorId');
+    if (!appointment || appointment.status !== 'Completed') {
+      req.flash('error_msg', 'You can only review completed appointments.');
+      return res.redirect('/user/profile');
+    }
+
+    const user = await User.findById(studentId).select('username');
+    const review = {
+      tutorId: appointment.tutorId._id,
+      content,
+      reviewerName: user.username,
+      reviewerID: studentId,
+      rating: parseInt(rating),
+    };
+
+    await User.findByIdAndUpdate(appointment.tutorId._id, { $push: { reviews: review } });
+
+    req.flash('success_msg', 'Review submitted successfully');
+    res.redirect('/user/profile');
+  } catch (error) {
+    console.error("Error submitting review:", error);
+    req.flash('error_msg', 'Internal server error.');
+    res.redirect('/user/profile');
+  }
+};
