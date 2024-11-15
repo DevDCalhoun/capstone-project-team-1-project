@@ -16,6 +16,8 @@ const flash = require('connect-flash');
 
 const User = require('./models/user');
 
+const port = process.env.PORT || 3000; // Default to 3000 if not specified
+
 // Middleware
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
@@ -61,18 +63,18 @@ store.on("error", function(e) {
 //Configures data for session management
 const sessionConfig = {
   store,
-  name: 'session',
+  name: `session_${port}`, // Unique session cookie per instance
   secret,
-  resave: false,  // Prevents saving session if it wasn't modified
-  saveUninitialized: false, // Only save sessions if they contain data
+  resave: false,
+  saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-    sameSite: 'lax', // Or 'strict' for stricter security on GET posts
-    expires: Date.now() + 1000 * 60 * 15, // Set to 15 minutes from now
-    maxAge: 1000 * 60 * 15 // 15 minutes in milliseconds
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    expires: Date.now() + 1000 * 60 * 15,
+    maxAge: 1000 * 60 * 15
   }
-}
+};
 
 app.use(session(sessionConfig)) // Use session configuration information
 

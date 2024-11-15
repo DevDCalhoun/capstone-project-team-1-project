@@ -173,8 +173,13 @@ router.post('/:id/reject',
   userController.rejectAppointment
 );
 
+
+router.post('/:id/complete', userController.completeAppointment);
+
+router.get('/:id/review', isAuthenticated, userController.getReviewPage);
+
+router.post('/:id/review', isAuthenticated, userController.submitReview);
+
 router.get('/:id', profileController.getProfile);
-
-
 
 module.exports = router;

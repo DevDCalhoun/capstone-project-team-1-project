@@ -62,8 +62,16 @@
               ">
                 <%= appointment.status %>
               </span> <br>
-              <strong>Details:</strong> <%= appointment.details %>
-              <!-- Optional: Add actions for students, like canceling appointments -->
+              <strong>Details:</strong> <%= appointment.details %> <br>
+    
+              <!-- Add "Write a Review" button if status is Completed -->
+              <% if (appointment.status === 'Completed') { %>
+                <div class="mt-2">
+                  <a href="/appointments/<%= appointment._id %>/review" class="btn btn-outline-primary btn-sm">
+                    Write a Review
+                  </a>
+                </div>
+              <% } %>
             </li>
           <% }) %>
         <% } else { %>
@@ -111,6 +119,12 @@
                     <button type="submit" class="btn btn-danger btn-sm">Reject</button>
                   </form>
                 </div>
+              <% } %>
+              <% if (appointment.status === 'Confirmed') { %>
+                <form action="/appointments/<%= appointment._id %>/complete" method="POST" style="display:inline;">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <button type="submit" class="btn btn-primary btn-sm">Complete</button>
+                </form>
               <% } %>
             </li>
           <% }) %>

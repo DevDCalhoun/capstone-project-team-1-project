@@ -3,6 +3,8 @@ const User = require('../models/user');
 const Appointment = require('../models/appointment.js');
 const { profileErrors, loginHandler } = require('../middleware/userErrorHandler.js');
 const { validationResult } = require('express-validator');
+const AppointmentManager = require('../classes/appointmentManager');
+
 
 exports.getProfile = async (req, res, next) => {
   try {
@@ -152,5 +154,74 @@ exports.rejectAppointment = async (req, res) => {
     console.error("Reject Appointment Error: ", error);
     req.flash('error_msg', 'Internal server error.');
     res.redirect('/appointments/profile');
+  }
+};
+
+exports.completeAppointment = async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const userRole = req.session.userRole; // Assuming userRole is stored in session
+
+    // Instantiate AppointmentManager with userId and userRole
+    const appointmentManager = new AppointmentManager(userId, userRole);
+
+    const appointmentId = req.params.id;
+    await appointmentManager.completeAppointment(appointmentId);
+
+    req.flash('success_msg', 'Appointment marked as completed');
+    res.redirect('/user/profile');
+  } catch (error) {
+    req.flash('error_msg', error.message);
+    res.redirect('/user/profile');
+  }
+};
+
+exports.getReviewPage = async (req, res) => {
+  try {
+    const appointmentId = req.params.id;
+    const appointment = await Appointment.findById(appointmentId).populate('tutorId', 'username');
+
+    if (!appointment || appointment.status !== 'Completed') {
+      req.flash('error_msg', 'You can only review completed appointments.');
+      res.redirect('/user/profile');
+    }
+
+    res.render('review', { appointmentId, tutorName: appointment.tutorId.username, csrfToken: req.csrfToken() });
+  } catch (error) {
+    console.error("Error displaying review page:", error);
+    req.flash('error_msg', 'Internal server error.');
+    res.redirect('/user/profile');
+  }
+};
+
+exports.submitReview = async (req, res) => {
+  try {
+    const { rating, content } = req.body;
+    const appointmentId = req.params.id;
+    const studentId = req.session.userId;
+
+    const appointment = await Appointment.findById(appointmentId).populate('tutorId');
+    if (!appointment || appointment.status !== 'Completed') {
+      req.flash('error_msg', 'You can only review completed appointments.');
+      return res.redirect('/user/profile');
+    }
+
+    const user = await User.findById(studentId).select('username');
+    const review = {
+      tutorId: appointment.tutorId._id,
+      content,
+      reviewerName: user.username,
+      reviewerID: studentId,
+      rating: parseInt(rating),
+    };
+
+    await User.findByIdAndUpdate(appointment.tutorId._id, { $push: { reviews: review } });
+
+    req.flash('success_msg', 'Review submitted successfully');
+    res.redirect('/user/profile');
+  } catch (error) {
+    console.error("Error submitting review:", error);
+    req.flash('error_msg', 'Internal server error.');
+    res.redirect('/user/profile');
   }
 };
