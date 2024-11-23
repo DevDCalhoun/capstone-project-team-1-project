@@ -25,6 +25,7 @@ module.exports.loginHandler = async (req, res, user) => {
     req.session.username = user.username;
     req.session.isAuthenticated = true;
     req.session.userRole = user.role;   // Stores user role in session for app-wide accessibility 
+    req.session.isTutor  = user.isTutor; // gets whether the user is a tutor for RBAC
     return res.status(200).redirect('/user/profile');
   }
 

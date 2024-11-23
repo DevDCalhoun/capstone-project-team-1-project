@@ -26,6 +26,17 @@ exports.getProfile = async (req, res, next) => {
       .populate('studentId', 'username email') // Populate student details
       .sort({ day: -1 }); // Sort appointments by date in descending order
 
+      for (let appointment of studentAppointments) {
+        // Fetch the tutor and their reviews
+        const tutor = await User.findById(appointment.tutorId._id).select('reviews');
+        const reviews = tutor.reviews || [];
+        
+        // Check if the logged-in user's username matches any review's username
+        appointment.existingReview = reviews.some(
+          (review) => review.reviewerName === user.username
+        );
+      }
+
     // Render the profile page with user info and both sets of appointments
     res.render('userProfile', { user, studentAppointments, tutorAppointments });
   } catch (error) {
@@ -217,6 +228,10 @@ exports.submitReview = async (req, res) => {
 
     await User.findByIdAndUpdate(appointment.tutorId._id, { $push: { reviews: review } });
 
+    const tutor = await User.findById(appointment.tutorId._id).select('reviews rating');
+    tutor.rating = calculateAverageRating(tutor.reviews);
+    await tutor.save();
+
     req.flash('success_msg', 'Review submitted successfully');
     res.redirect('/user/profile');
   } catch (error) {
@@ -224,4 +239,98 @@ exports.submitReview = async (req, res) => {
     req.flash('error_msg', 'Internal server error.');
     res.redirect('/user/profile');
   }
+};
+
+exports.getEditReviewPage = async (req, res) => {
+  try {
+    const appointmentId = req.params.id;
+    const studentId = req.session.userId;
+
+    // Find the appointment and ensure it's completed
+    const appointment = await Appointment.findById(appointmentId).populate('tutorId', 'username');
+    if (!appointment || appointment.status !== 'Completed') {
+      req.flash('error_msg', 'You can only edit reviews for completed appointments.');
+      return res.redirect('/user/profile');
+    }
+
+    // Fetch the student and tutor information
+    const user = await User.findById(studentId).select('username');
+    const tutor = await User.findById(appointment.tutorId._id).select('reviews');
+
+    // Find the existing review by the student's username
+    const reviews = tutor.reviews || [];
+    const existingReview = reviews.find((review) => review.reviewerName === user.username);
+
+    if (!existingReview) {
+      req.flash('error_msg', 'No existing review found to edit.');
+      return res.redirect('/user/profile');
+    }
+
+    // Render the edit review page with the existing review data
+    res.render('editReview', {
+      appointmentId,
+      tutorName: appointment.tutorId.username,
+      review: existingReview, // Pass the review for pre-filling the form
+      csrfToken: req.csrfToken(),
+    });
+  } catch (error) {
+    console.error('Error displaying edit review page:', error);
+    req.flash('error_msg', 'Internal server error.');
+    res.redirect('/user/profile');
+  }
+};
+
+exports.submitEditedReview = async (req, res) => {
+  try {
+    const { rating, content } = req.body;
+    const appointmentId = req.params.id;
+    const studentId = req.session.userId;
+
+    // Find the appointment and ensure it's completed
+    const appointment = await Appointment.findById(appointmentId).populate('tutorId');
+    if (!appointment || appointment.status !== 'Completed') {
+      req.flash('error_msg', 'You can only edit reviews for completed appointments.');
+      return res.redirect('/user/profile');
+    }
+
+    // Fetch the student and tutor information
+    const user = await User.findById(studentId).select('username');
+    const tutor = await User.findById(appointment.tutorId._id).select('reviews');
+    const reviews = tutor.reviews || [];
+
+    // Use the same strategy to locate the existing review
+    const review = reviews.find(
+      (r) => r.reviewerName === user.username
+    );
+
+    if (!review) {
+      req.flash('error_msg', 'Review not found.');
+      return res.redirect('/user/profile');
+    }
+
+    // Update the review fields
+    review.rating = parseInt(rating, 10);
+    review.content = content;
+
+    // Save the updated tutor document
+    await tutor.save();
+
+    req.flash('success_msg', 'Review updated successfully.');
+    res.redirect('/user/profile');
+  } catch (error) {
+    console.error('Error submitting edited review:', error);
+    req.flash('error_msg', 'Internal server error.');
+    res.redirect('/user/profile');
+  }
+};
+
+
+// helper function to calculate new rating after a review is submitted for a tutor
+const calculateAverageRating = (reviews) => {
+  if (!reviews || reviews.length === 0) {
+    return 0; 
+  }
+
+  const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+  return totalRating / reviews.length;
 };
