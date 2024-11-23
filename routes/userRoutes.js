@@ -180,6 +180,10 @@ router.get('/:id/review', isAuthenticated, userController.getReviewPage);
 
 router.post('/:id/review', isAuthenticated, userController.submitReview);
 
+router.get('/:id/editReview', isAuthenticated, userController.getEditReviewPage);
+
+router.post('/:id/editReview', isAuthenticated, userController.submitEditedReview);
+
 router.get('/:id', profileController.getProfile);
 
 module.exports = router;

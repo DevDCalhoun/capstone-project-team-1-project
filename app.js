@@ -101,6 +101,7 @@ app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isAuthenticated || false;
   res.locals.user = req.session.user || null;
   res.locals.userId = req.session.userId
+  res.locals.isTutor = req.session.isTutor;
   next();
 });
 
