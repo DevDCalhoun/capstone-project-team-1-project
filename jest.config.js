@@ -5,7 +5,8 @@ module.exports = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"], // Ensures custom setup after environment setup
   "collectCoverage": true,
   "coverageReporters" : [
-    "html"
+    "html",
+    "text"
   ],
   "coverageDirectory": "docs/coverage",
 };
