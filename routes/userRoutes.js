@@ -13,7 +13,33 @@ const { addMinutes } = require('date-fns');
 const flash = require('connect-flash');
 const { param } = require('express-validator');
 const profileController = require('../controllers/profileController');
+const upload = require('../middleware/upload');
+const cloudinary = require('cloudinary').v2;
 
+// route for uploading images on the profile management page
+router.post('/profile/upload', isAuthenticated, async (req, res) => {
+  try {
+    const { image } = req.body;
+    const userId = req.session.userId;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const uploadResponse = await cloudinary.uploader.upload(`data:image/jpeg;base64,${image}`, {
+      folder: 'profile_pictures',
+    });
+
+    user.profilePicture = uploadResponse.secure_url; // Save Cloudinary URL
+    await user.save();
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Error uploading profile picture:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 // Route for profile page
 router.get('/profile', isAuthenticated, userController.getProfile);
@@ -185,5 +211,7 @@ router.get('/:id/editReview', isAuthenticated, userController.getEditReviewPage)
 router.post('/:id/editReview', isAuthenticated, userController.submitEditedReview);
 
 router.get('/:id', profileController.getProfile);
+
+
 
 module.exports = router;

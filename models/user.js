@@ -57,7 +57,11 @@ const userSchema = new Schema({
     appointmentAsTutor: [{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Appointment' 
-    }]
+    }],
+    profilePicture: {
+        type: String, // URL for the profile picture
+        required: false, 
+      },
 });
 
 const User = mongoose.model('User', userSchema);

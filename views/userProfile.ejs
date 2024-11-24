@@ -55,6 +55,15 @@
       <h1>Welcome to your profile, <b><%= user.username %></b>!</h1>
     </div>
 
+    <div class="section-container">
+      <h4>Profile Picture</h4>
+      <form id="profileForm">
+        <input type="file" id="profilePicture" accept="image/*" />
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <button type="submit" class="btn btn-primary">Upload</button>
+      </form>
+    </div>
+
     <div class="container mt-5">
       <h2 class="text-center mb-4">Your Appointments</h2>
 
@@ -177,5 +186,6 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    <script src="picUpload.js"></script>
   </body>
 </html>
