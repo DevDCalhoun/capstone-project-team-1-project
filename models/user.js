@@ -57,7 +57,16 @@ const userSchema = new Schema({
     appointmentAsTutor: [{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Appointment' 
-    }]
+    }],
+      coffeeLink: {
+        type: String,
+        required: false, // Optional field
+    },
+    platform: {
+        type: String,
+        enum: ['buymeacoffee', 'ko-fi', 'paypal'], // Add other platforms if needed
+        required: false, // Optional field
+    },
 });
 
 const User = mongoose.model('User', userSchema);

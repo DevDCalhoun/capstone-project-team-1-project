@@ -315,6 +315,10 @@ exports.submitEditedReview = async (req, res) => {
     // Save the updated tutor document
     await tutor.save();
 
+    // re-calculate user rating
+    tutor.rating = calculateAverageRating(tutor.reviews);
+    await tutor.save();
+
     req.flash('success_msg', 'Review updated successfully.');
     res.redirect('/user/profile');
   } catch (error) {
@@ -323,7 +327,6 @@ exports.submitEditedReview = async (req, res) => {
     res.redirect('/user/profile');
   }
 };
-
 
 // helper function to calculate new rating after a review is submitted for a tutor
 const calculateAverageRating = (reviews) => {

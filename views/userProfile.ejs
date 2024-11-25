@@ -55,6 +55,38 @@
       <h1>Welcome to your profile, <b><%= user.username %></b>!</h1>
     </div>
 
+    <!-- Link a payment account -->
+    <div class="section-container">
+      <h4>Update Buy Me a Coffee Link</h4>
+      <form action="/user/profile/update-coffee-link" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <div class="mb-3">
+          <label for="platform" class="form-label">Select Platform</label>
+          <select class="form-select" id="platform" name="platform" required>
+            <option value="buymeacoffee" <%= user.platform === 'buymeacoffee' ? 'selected' : '' %>>Buy Me a Coffee</option>
+            <option value="ko-fi" <%= user.platform === 'ko-fi' ? 'selected' : '' %>>Ko-fi</option>
+            <option value="paypal" <%= user.platform === 'paypal' ? 'selected' : '' %>>PayPal</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="username" class="form-label">Platform Username/ID</label>
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            name="username"
+            value="<%= user.coffeeLink ? user.coffeeLink.split('/').pop() : '' %>"
+            placeholder="Enter your platform username or ID"
+            required
+          />
+          <small class="text-muted">
+            For PayPal, provide your PayPal.me username (not email).
+          </small>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Link</button>
+      </form>
+    </div>
+
     <div class="container mt-5">
       <h2 class="text-center mb-4">Your Appointments</h2>
 
@@ -177,5 +209,6 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    <script src="picUpload.js"></script>
   </body>
 </html>
