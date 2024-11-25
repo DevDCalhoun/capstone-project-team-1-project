@@ -67,6 +67,59 @@ describe('User Controller Unit Tests', () => {
           tutorAppointments: [mockAppointment],
         });
       });
+  });
 
+  describe('postLogin', () => {
+    it('should handle errors during login', async () => {
+      req.body.username = 'user1';
+      User.findOne.mockRejectedValue(new Error('Database error'));
+
+      await postLogin(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.render).toHaveBeenCalledWith('login', { error: 'An error occured. Please try again later.' });
+    });
+  });
+
+  describe('acceptAppointment', () => {
+    let req, res;
+  
+    beforeEach(() => {
+      req = {
+        params: { id: '123' },
+        session: { userId: '456' },
+        flash: jest.fn(),
+      };
+      res = {
+        redirect: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+      jest.clearAllMocks();
+    });
+  
+    it('should redirect with error if appointment not found', async () => {
+      validationResult.mockReturnValueOnce({
+        isEmpty: jest.fn().mockReturnValue(true),
+      });
+      Appointment.findById.mockResolvedValueOnce(null);
+  
+      await acceptAppointment(req, res);
+  
+      expect(validationResult).toHaveBeenCalledWith(req);
+      expect(req.flash).toHaveBeenCalledWith('error_msg', 'Appointment not found.');
+      expect(res.redirect).toHaveBeenCalledWith('/appointments/profile');
+    });
+  
+    it('should handle validation errors', async () => {
+      validationResult.mockReturnValueOnce({
+        isEmpty: jest.fn().mockReturnValue(false),
+        array: jest.fn().mockReturnValue([{ msg: 'Validation error' }]),
+      });
+  
+      await acceptAppointment(req, res);
+  
+      expect(req.flash).toHaveBeenCalledWith('error_msg', 'Validation error');
+      expect(res.redirect).toHaveBeenCalledWith('/appointments/profile');
+    });
   });
 });
