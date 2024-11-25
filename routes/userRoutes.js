@@ -14,7 +14,6 @@ const flash = require('connect-flash');
 const { param } = require('express-validator');
 const profileController = require('../controllers/profileController');
 
-
 // Route for profile page
 router.get('/profile', isAuthenticated, userController.getProfile);
 
@@ -173,6 +172,41 @@ router.post('/:id/reject',
   userController.rejectAppointment
 );
 
+
+router.post('/profile/update-coffee-link', isAuthenticated, async (req, res) => {
+  const { platform, username } = req.body;
+  const userId = req.session.userId;
+
+  const platforms = {
+    buymeacoffee: 'https://buymeacoffee.com/',
+    'ko-fi': 'https://ko-fi.com/',
+    paypal: 'https://paypal.me/',
+  };
+
+  if (!platforms[platform]) {
+    req.flash('error_msg', 'Invalid platform selected.');
+    return res.redirect('/user/profile');
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      req.flash('error_msg', 'User not found.');
+      return res.redirect('/user/profile');
+    }
+
+    user.coffeeLink = `${platforms[platform]}${username}`;
+    user.platform = platform;
+    await user.save();
+
+    req.flash('success_msg', 'Buy Me a Coffee link updated successfully.');
+    res.redirect('/user/profile');
+  } catch (error) {
+    console.error('Error updating coffee link:', error);
+    req.flash('error_msg', 'An error occurred while updating the link.');
+    res.redirect('/user/profile');
+  }
+});
 
 router.post('/:id/complete', userController.completeAppointment);
 
