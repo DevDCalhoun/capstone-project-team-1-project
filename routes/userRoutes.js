@@ -13,33 +13,6 @@ const { addMinutes } = require('date-fns');
 const flash = require('connect-flash');
 const { param } = require('express-validator');
 const profileController = require('../controllers/profileController');
-const upload = require('../middleware/upload');
-const cloudinary = require('cloudinary').v2;
-
-// route for uploading images on the profile management page
-router.post('/profile/upload', isAuthenticated, async (req, res) => {
-  try {
-    const { image } = req.body;
-    const userId = req.session.userId;
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    const uploadResponse = await cloudinary.uploader.upload(`data:image/jpeg;base64,${image}`, {
-      folder: 'profile_pictures',
-    });
-
-    user.profilePicture = uploadResponse.secure_url; // Save Cloudinary URL
-    await user.save();
-
-    res.status(200).json({ success: true });
-  } catch (error) {
-    console.error('Error uploading profile picture:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
 
 // Route for profile page
 router.get('/profile', isAuthenticated, userController.getProfile);
@@ -200,6 +173,41 @@ router.post('/:id/reject',
 );
 
 
+router.post('/profile/update-coffee-link', isAuthenticated, async (req, res) => {
+  const { platform, username } = req.body;
+  const userId = req.session.userId;
+
+  const platforms = {
+    buymeacoffee: 'https://buymeacoffee.com/',
+    'ko-fi': 'https://ko-fi.com/',
+    paypal: 'https://paypal.me/',
+  };
+
+  if (!platforms[platform]) {
+    req.flash('error_msg', 'Invalid platform selected.');
+    return res.redirect('/user/profile');
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      req.flash('error_msg', 'User not found.');
+      return res.redirect('/user/profile');
+    }
+
+    user.coffeeLink = `${platforms[platform]}${username}`;
+    user.platform = platform;
+    await user.save();
+
+    req.flash('success_msg', 'Buy Me a Coffee link updated successfully.');
+    res.redirect('/user/profile');
+  } catch (error) {
+    console.error('Error updating coffee link:', error);
+    req.flash('error_msg', 'An error occurred while updating the link.');
+    res.redirect('/user/profile');
+  }
+});
+
 router.post('/:id/complete', userController.completeAppointment);
 
 router.get('/:id/review', isAuthenticated, userController.getReviewPage);
@@ -211,7 +219,5 @@ router.get('/:id/editReview', isAuthenticated, userController.getEditReviewPage)
 router.post('/:id/editReview', isAuthenticated, userController.submitEditedReview);
 
 router.get('/:id', profileController.getProfile);
-
-
 
 module.exports = router;

@@ -58,10 +58,15 @@ const userSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Appointment' 
     }],
-    profilePicture: {
-        type: String, // URL for the profile picture
-        required: false, 
-      },
+      coffeeLink: {
+        type: String,
+        required: false, // Optional field
+    },
+    platform: {
+        type: String,
+        enum: ['buymeacoffee', 'ko-fi', 'paypal'], // Add other platforms if needed
+        required: false, // Optional field
+    },
 });
 
 const User = mongoose.model('User', userSchema);
