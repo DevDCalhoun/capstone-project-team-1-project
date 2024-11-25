@@ -3,4 +3,10 @@ module.exports = {
   testEnvironment: 'node',
   testMatch: ["<rootDir>/test/**/*.test.js"],  
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"], // Ensures custom setup after environment setup
+  "collectCoverage": true,
+  "coverageReporters" : [
+    "html",
+    "text"
+  ],
+  "coverageDirectory": "docs/coverage",
 };
