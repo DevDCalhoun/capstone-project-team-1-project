@@ -1,3 +1,5 @@
+This is the technical guide. For the practical running of the application, view the video at this link after getting everything set up from the instructions in this document: https://www.youtube.com/watch?v=lnolLPuVJVQ&ab_channel=DarylCalhoun
+
 This guide goes over setting up and running the project. A youtube video has been created to demonstrate how to use the application in a practical manner from a user's functional viewpoint.
 
 This guide covers the basic information for the project as well as setting it up and getting it running.
@@ -22,11 +24,11 @@ Setting up  and running the project:
 
   2. Register for MongoDB Atlas at: https://www.mongodb.com/cloud/atlas
 
-  3. Install mongodb compass at: https://www.mongodb.com/docs/compass/current/install/
+  3. Install mongodb at: https://www.mongodb.com/docs/manual/installation/
 
   4. Open your terminal or command prompt and navigate to your desired directory to keep the project
 
-  5. Clone the Github repository using this command: git clone https://github.com/uwf-capstone-fa2024/capstone-project-team-1-project.git
+  5. Clone the Github repository if necessary using this command: git clone https://github.com/uwf-capstone-fa2024/capstone-project-team-1-project.git
 
   6. Navigate to the project directory and use the command: npm install
 
@@ -56,3 +58,14 @@ Setting up  and running the project:
 
     A: Ensure that you pulled the correct branch, the most up to date being the main branch. Ensure that you have installed node, node package manager, and that you installed the node dependancies in the steps above, and ensure that you have MongoDB installed.
 
+-------------------------
+
+    Q: Seeding my database with users does not work properly, what do I do?
+    A: Ensure that you have MongoDB installed prperly for your particular system and then attempt to seed users again
+
+-------------------------
+
+    Q: I cannot start the server using nodemon, what do I do?
+    A: After running the command "npm i" from the command line within the project directory, nodemon should work, but if not then you should run this command again: npm i -g nodemon
+
+    The previous command will ensure that nodemon is installed globally and should fix the issue.
