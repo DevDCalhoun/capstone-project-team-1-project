@@ -162,6 +162,9 @@ In the project's next iteration of development, newer versions add the following
 
 ## Version History
 
+*  0.6 
+    * User profile page customization
+    * Tutor ratings and reviews
 *  0.5
     * CSRF tokens in web form POST requests
     * Authorization routing
@@ -185,6 +188,69 @@ In the project's next iteration of development, newer versions add the following
 * 0.1
     * Initial static web page
     * Navigation Bar
+
+## Files in Final Submission
+The files included in the final submission for this project include:
+    * server.js
+    * README.md (this file)
+    * jest.setup.js
+    * jest.config.js
+    * app.js
+    * /views/partials/navbar.ejs - handles styles
+    * /views/404error.ejs - 404 page
+    * /views/about.ejs - about page
+    * /views/availability.ejs - availability page
+    * /views/editReview.ejs - edit review page
+    * /views/error.ejs - 404 error page
+    * /views/home.ejs - home page
+    * /views/login.ejs - login page
+    * /views/make-appointment.ejs - Appointment making page
+    * /views/publicProfile.ejs - public profile page
+    * /views/register.ejs - registration page
+    * /views/review.ejs - review page
+    * /views/search.ejs - search page
+    * /views/userProfile.ejs - private profile page
+    * /tests/integration/routes.test.js - route testing
+    * /tests/unit/test.js - other tests
+    * /tests/unit/userLogin.test.js - user login testing
+    * /test/integration/app.test.js - other tests
+    * /test/integration/registration.test.js - registration testing
+    * /test/unit/appointmentManager.test.js - appointment manager testing
+    * /test/unit/apptMgr-RBAC.test.js - RBAC testing
+    * /test/unit/authRole.test.js - authentication testing
+    * /test/unit/availabilityManager.test.js - availability testing
+    * /test/unit/search.test.js - search tests
+    * /test/unit/userController.unit.test.js - user controller testing
+    * /seedingDB/seedHelper.js - helps seed users into database
+    * /seedingDB/seedUsers.js - seeds users into database
+    * /routes/appointment.js - Routes for appointments
+    * /routes/register.js - routes for registration
+    * /routes/userRoutes.js - general user routes
+    * /public/js/searchIcon.js - helper js
+    * /public/js/setMinDateTime.js - helper js
+    * /public/images/DisrupTutorLogo.png - logos
+    * /public/styles/about.css - about styles
+    * /public/styles/home.css - home page styles
+    * /public/styles/login.css - login page styles
+    * /public/styles/navbar.css - navbar styles
+    * /public/styles/publicProfile.css - public profile styles
+    * /models/appointment.js - appointment model
+    * /models/availability.js - availability model
+    * /models/review.js - review model
+    * /models/user.js - user model
+    * /middleware/auth.js - authentication middleware
+    * /middleware/authRole.js - authentication role middleware
+    * /middleware/errorHandler.js - error handling code
+    * /middleware/userErrorHandler.js - user page error handling code
+    * /logging/logger.js - logger code
+    * /documentation/TestingDocument.docx - testing documentation
+    * /docs/coverage --- containes many files already listed 
+    * /controllers/profileController.js - profile routes
+    * /controllers/userController.js - other user routes
+    * /classes/appointmentManager.js - appointment manager to help make appointments
+    * /classes/availabilityManager.js - helps make availability work
+    * /classes/search.js - used for search page functionality
+
 
 ## License
 
