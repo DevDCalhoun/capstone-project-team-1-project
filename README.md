@@ -1,4 +1,4 @@
-# *D*isrup*T*utor
+# *U*WF-*T*utor-*C*onnect
 
 ![Logo](public/images/DisrupTutorLogo-288px.png)
 
