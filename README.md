@@ -41,6 +41,7 @@ The video demo is walkthrough of the web application in its current status.  Set
 
 * [Stage 1 Demo](https://youtu.be/-i7RM1oir0A)
 * [Stage 2 Demo](https://youtu.be/xvIwwKJa_Y4)
+* [Stage 3 Demo](https://www.youtube.com/watch?v=lnolLPuVJVQ&ab_channel=DarylCalhoun)
 
 
 ## Getting Started
